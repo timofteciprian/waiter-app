@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="133px" height="71px" viewBox="0 0 133 71" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-6.5%" y="-9.7%" width="113.0%" height="124.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="a" transform="translate(-38.000000, -36.000000)" fill="#417505" stroke="#979797">
+            <g id="Group" filter="url(#filter-1)" transform="translate(43.000000, 39.000000)">
+                <rect id="Rectangle-2" x="28.5" y="0.5" width="66" height="61"></rect>
+                <ellipse id="Oval" cx="115" cy="8.5" rx="8" ry="8.5"></ellipse>
+                <ellipse id="Path" cx="8" cy="8.5" rx="8" ry="8.5"></ellipse>
+                <ellipse id="Oval" cx="8" cy="51.5" rx="8" ry="8.5"></ellipse>
+                <ellipse id="Oval" cx="115" cy="51.5" rx="8" ry="8.5"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>
