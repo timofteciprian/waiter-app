@@ -1,8 +1,8 @@
 import React from "react";
-
+import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import { List, Avatar } from "antd";
 
-export default class Home extends React.Component {
+class Home extends React.Component {
   state = {
     listData: []
   };
@@ -12,7 +12,7 @@ export default class Home extends React.Component {
       this.state.listData.push({
         title: "Restaurant",
         avatar:
-          "https://thumbs.dreamstime.com/z/restaurant-chef-icon-logo-vector-illustration-114601311.jpg",
+          "https://previews.123rf.com/images/sergeypykhonin/sergeypykhonin1707/sergeypykhonin170700052/81892309-restaurant-logo-icon-or-symbol-for-design-menu-eatery-canteen-or-cafe-lettering-vector-illustration.jpg",
         description:
           "There aren't enough food, service, value or atmosphere ratings. Be one of the first to write a review!",
         content:
@@ -20,8 +20,9 @@ export default class Home extends React.Component {
       });
     }
     return (
-      <div style={divStyle}>
+      <div>
         <List
+          style={styles.listStyle}
           itemLayout="vertical"
           size="large"
           dataSource={this.state.listData}
@@ -37,7 +38,7 @@ export default class Home extends React.Component {
               }
             >
               <List.Item.Meta
-                avatar={<Avatar src={item.title} />}
+                avatar={<Avatar src={item.avatar} />}
                 title={<a href={"/restaurant"}>{item.title}</a>}
                 description={item.description}
               />
@@ -45,12 +46,28 @@ export default class Home extends React.Component {
             </List.Item>
           )}
         />
+        <Map google={this.props.google} zoom={14} style={styles.map}>
+          <Marker onClick={this.onMarkerClick} name={"Current location"} />
+
+          <InfoWindow onClose={this.onInfoWindowClose} />
+        </Map>
       </div>
     );
   }
 }
 
-const divStyle = {
+export default GoogleApiWrapper({
+  apiKey: "AIzaSyDmkf0KS8VEtupu2PpGbg9iW0WxSer3pVw"
+})(Home);
+
+const styles = {
+  listStyle: {
+    width: "900px",
+    marginLeft: "100px"
+  },
+  map: {
+    width: "600px"
+  }
   // width: "80%",
   // marginLeft: "150px"
 };
