@@ -1,6 +1,6 @@
 import React from "react";
 import "antd/dist/antd.css";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Avatar } from "antd";
 import { Link } from "react-router-dom";
 
 const { Header } = Layout;
@@ -17,7 +17,10 @@ const Navbar = () => {
           style={{ lineHeight: "64px", backgroundColor: "#4D4141" }}
         >
           <Menu.Item>
-            <a href="/">Logo</a>
+            <a href="/">
+              {" "}
+              <Avatar src="http://www.rainbowlogos.com/wp-content/uploads/2016/05/1-3-800x600.jpg" />
+            </a>
           </Menu.Item>
           <Menu.Item>
             <Link to="/">Home</Link>
