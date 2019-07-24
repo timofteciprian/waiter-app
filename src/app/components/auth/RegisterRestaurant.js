@@ -1,8 +1,7 @@
 import React from "react";
-import { Form, Input, Select, Checkbox, Button, AutoComplete } from "antd";
+import { Form, Input, Select, Checkbox, Button } from "antd";
 
 const { Option } = Select;
-const AutoCompleteOption = AutoComplete.Option;
 
 class RegisterRestaurant extends React.Component {
   state = {
@@ -55,7 +54,6 @@ class RegisterRestaurant extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { autoCompleteResult } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -88,17 +86,13 @@ class RegisterRestaurant extends React.Component {
       </Select>
     );
 
-    const websiteOptions = autoCompleteResult.map(website => (
-      <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-    ));
-
     return (
-      <div style={style.divStyle}>
-        <h1 style={style.titleStyle}>Registation restaurant</h1>
+      <div style={styles.divStyle}>
+        <h1 style={styles.titleStyle}>Registration restaurant</h1>
         <Form
           {...formItemLayout}
           onSubmit={this.handleSubmit}
-          style={style.formStyle}
+          style={styles.formStyle}
         >
           <Form.Item label="E-mail">
             {getFieldDecorator("email", {
@@ -170,19 +164,6 @@ class RegisterRestaurant extends React.Component {
               <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
             )}
           </Form.Item>
-          <Form.Item label="Website">
-            {getFieldDecorator("website", {
-              rules: [{ required: true, message: "Please input website!" }]
-            })(
-              <AutoComplete
-                dataSource={websiteOptions}
-                onChange={this.handleWebsiteChange}
-                placeholder="website"
-              >
-                <Input />
-              </AutoComplete>
-            )}
-          </Form.Item>
 
           <Form.Item {...tailFormItemLayout}>
             {getFieldDecorator("agreement", {
@@ -209,7 +190,7 @@ const RegistrationRestaurantForm = Form.create({ name: "register" })(
 );
 export default RegistrationRestaurantForm;
 
-const style = {
+const styles = {
   titleStyle: {
     display: "flex",
     marginLeft: "150px",
