@@ -14,13 +14,13 @@ class Login extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <div style={style.divStyle}>
-        <h1 style={style.titleStyle}>Sign in</h1>
+      <div style={styles.divStyle}>
+        <h1 style={styles.titleStyle}>Sign in</h1>
         <div>
           <Form
             onSubmit={this.handleSubmit}
             className="login-form"
-            style={style.formStyle}
+            style={styles.formStyle}
           >
             <Form.Item>
               {getFieldDecorator("username", {
@@ -68,20 +68,9 @@ class Login extends React.Component {
                 Sign in
               </Button>
               <div style={{ textAlign: "center" }}>
-                Or <a href="/register ">register now!</a>
+                Or <a href="/registerSelect ">register now!</a>
               </div>
             </Form.Item>
-            <Button type="primary">
-              <a href="/">Client</a>
-            </Button>
-            <Button type="primary">
-              <a href="/">Admin</a>
-            </Button>
-            <div style={{ textAlign: "center", marginTop: "100px" }}>
-              <a href="/registerRestaurant ">
-                Do you want to register a restaurant?
-              </a>
-            </div>
           </Form>
         </div>
       </div>
@@ -92,7 +81,7 @@ class Login extends React.Component {
 const LoginForm = Form.create({ name: "normal_login" })(Login);
 export default LoginForm;
 
-const style = {
+const styles = {
   titleStyle: {
     display: "flex",
     marginLeft: "190px",
