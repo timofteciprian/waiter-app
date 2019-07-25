@@ -1,7 +1,7 @@
 import React from "react";
 //import {  } from "antd";
 
-class ProfileRestaurant extends React.Component {
+class MyAccount extends React.Component {
   state = {
     selectedFile: null
   };
@@ -24,7 +24,7 @@ class ProfileRestaurant extends React.Component {
   }
 }
 
-export default ProfileRestaurant;
+export default MyAccount;
 
 // const styles = {
 //   titleStyle: {
