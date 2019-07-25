@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Icon, Input, Button, Checkbox } from "antd";
+import { Form, Icon, Input, Button, Checkbox, Dropdown, Menu } from "antd";
 
 class Login extends React.Component {
   handleSubmit = e => {
@@ -10,6 +10,18 @@ class Login extends React.Component {
       }
     });
   };
+
+  routesForReister = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="/register ">Register client</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="1">
+        <a href="/registerRestaurant">Register restaurant</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -68,7 +80,12 @@ class Login extends React.Component {
                 Sign in
               </Button>
               <div style={{ textAlign: "center" }}>
-                Or <a href="/registerSelect ">register now!</a>
+                <p>Or </p>
+                <Dropdown overlay={this.routesForReister} trigger={["click"]}>
+                  <a className="ant-dropdown-link" href>
+                    Register <Icon type="down" />
+                  </a>
+                </Dropdown>
               </div>
             </Form.Item>
           </Form>
