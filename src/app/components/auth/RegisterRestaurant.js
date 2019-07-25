@@ -23,33 +23,25 @@ class RegisterRestaurant extends React.Component {
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
 
-  compareToFirstPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
-    } else {
-      callback();
-    }
+  compareToFirstPassword = (rule, value) => {
+    return new Promise((resolve, reject) => {
+      const { form } = this.props;
+      if (value && value !== form.getFieldValue("password")) {
+        reject("Two passwords that you enter is inconsistent!");
+      } else {
+        resolve();
+      }
+    });
   };
 
-  validateToNextPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
-    }
-    callback();
-  };
-
-  handleWebsiteChange = value => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = [".com", ".org", ".net"].map(
-        domain => `${value}${domain}`
-      );
-    }
-    this.setState({ autoCompleteResult });
+  validateToNextPassword = (rule, value) => {
+    return new Promise((resolve, reject) => {
+      const { form } = this.props;
+      if (value && this.state.confirmDirty) {
+        reject(form.validateFields(["confirm"], { force: true }));
+      }
+      resolve();
+    });
   };
 
   render() {
