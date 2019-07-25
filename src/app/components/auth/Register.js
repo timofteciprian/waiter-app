@@ -7,9 +7,7 @@ class Register extends React.Component {
     confirmDirty: false,
     autoCompleteResult: [],
     email: "",
-    password: "",
-    nickname: "",
-    phoneNumber: ""
+    password: ""
   };
 
   handleSubmit = e => {
@@ -18,9 +16,7 @@ class Register extends React.Component {
       if (!err) {
         this.setState({
           email: values.email,
-          password: values.password,
-          nickname: values.nickname,
-          phoneNumber: values.phone
+          password: values.password
         });
       }
     });
@@ -31,21 +27,25 @@ class Register extends React.Component {
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
 
-  compareToFirstPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
-    } else {
-      callback();
-    }
+  compareToFirstPassword = (rule, value) => {
+    return new Promise((resolve, reject) => {
+      const { form } = this.props;
+      if (value && value !== form.getFieldValue("password")) {
+        reject("Two passwords that you enter is inconsistent!");
+      } else {
+        resolve();
+      }
+    });
   };
 
-  validateToNextPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
-    }
-    callback();
+  validateToNextPassword = (rule, value) => {
+    return new Promise((resolve, reject) => {
+      const { form } = this.props;
+      if (value && this.state.confirmDirty) {
+        reject(form.validateFields(["confirm"], { force: true }));
+      }
+      resolve();
+    });
   };
 
   render() {
