@@ -1,10 +1,13 @@
 import React from "react";
 import "antd/dist/antd.css";
-import { Layout, Menu, Avatar } from "antd";
+import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
 import table from "../../../static/Group.svg";
 import tableReservation from "../../../static/restaurant-table.png";
 import menu from "../../../static/main.png";
+import Example from "./setTablesInRestaurant/example";
+import { DndProvider } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 
 const { Header, Content } = Layout;
 export default class ReservationTable extends React.Component {
@@ -21,10 +24,8 @@ export default class ReservationTable extends React.Component {
               defaultSelectedKeys={["2"]}
               style={style.divStyle}
             >
-              <Avatar src="http://www.rainbowlogos.com/wp-content/uploads/2016/05/1-3-800x600.jpg" />
-
               <Menu.Item>
-                <Link to="/reservationTable">
+                <Link to="/restaurant/reservationTable">
                   <img
                     src={tableReservation}
                     alt="table"
@@ -34,7 +35,7 @@ export default class ReservationTable extends React.Component {
                 </Link>
               </Menu.Item>
               <Menu.Item>
-                <Link to="/menu">
+                <Link to="/restaurant/menu">
                   <img
                     src={menu}
                     alt="menu"
@@ -46,6 +47,9 @@ export default class ReservationTable extends React.Component {
             </Menu>
           </Header>
           <Content>
+            <DndProvider backend={HTML5Backend}>
+              <Example />
+            </DndProvider>
             <div style={style.tables}>
               <img src={table} alt="table" style={{ margin: 20 }} />
               <img src={table} alt="table" style={{ margin: 20 }} />
