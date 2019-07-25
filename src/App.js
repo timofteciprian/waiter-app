@@ -9,15 +9,15 @@ import RegistrationRestaurantForm from "./app/components/auth/RegisterRestaurant
 import Restaurant from "./app/components/restaurant/Restaurant";
 import ReservationTable from "./app/components/restaurant/ReservationTable";
 import MenuRestaurant from "./app/components/restaurant/MenuRestaurant";
-import RegisterSelect from "./app/components/auth/RegisterSelect";
-import ProfileRestaurant from "./app/components/profile/profileRestaurant";
+import MyAccount from "./app/components/myAccount/MyAccount";
+import Navbar from "./app/components/Navbar";
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/registerSelect" component={RegisterSelect} />
         <Route path="/login" component={LoginForm} />
         <Route path="/register" component={RegistrationForm} />
         <Route
@@ -30,7 +30,7 @@ function App() {
           component={ReservationTable}
         />
         <Route path="/restaurant/menu" component={MenuRestaurant} />
-        <Route path="/profileRestaurant" component={ProfileRestaurant} />
+        <Route path="/myAccount" component={MyAccount} />
       </Switch>
     </div>
   );
