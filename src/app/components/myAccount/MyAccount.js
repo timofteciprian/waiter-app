@@ -1,5 +1,5 @@
 import React from "react";
-import { Upload, Icon, Modal } from "antd";
+import { Upload, Icon, Modal, Avatar } from "antd";
 import { Layout, Menu, List, Card, Button } from "antd";
 import { Link } from "react-router-dom";
 import tableReservation from "../../../static/restaurant-table.png";
@@ -21,7 +21,8 @@ class MyAccount extends React.Component {
   state = {
     previewVisible: false,
     previewImage: "",
-    visible: false,
+    productsModalVisible: false,
+    profileDetailsModalVisible: false,
     editingProduct: {
       title: "",
       description: "",
@@ -36,6 +37,17 @@ class MyAccount extends React.Component {
         price: "25 ron",
         image:
           "http://www.trenta.ro/wp-content/uploads/2012/04/Pizza-Cascavalerii-Gustului-26-cm-si-30-cm.jpg"
+      }
+    ],
+    profileDetails: [
+      {
+        title: "Restaurant",
+        avatar:
+          "https://previews.123rf.com/images/sergeypykhonin/sergeypykhonin1707/sergeypykhonin170700052/81892309-restaurant-logo-icon-or-symbol-for-design-menu-eatery-canteen-or-cafe-lettering-vector-illustration.jpg",
+        description:
+          "There aren't enough food, service, value or atmosphere ratings. Be one of the first to write a review!",
+        content:
+          "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently."
       }
     ]
   };
@@ -54,25 +66,42 @@ class MyAccount extends React.Component {
 
   handleChange = ({ fileList }) => this.setState({ fileList });
 
-  showModal = () => {
+  showModalProducts = () => {
     this.setState({
-      visible: true
+      productsModalVisible: true
+    });
+  };
+  showModalProfileDetails = () => {
+    this.setState({
+      profileDetailsModalVisible: true
     });
   };
 
-  handleOk = () => {
+  handleOkProducts = () => {
     const newProducts = this.state.products.slice();
     newProducts.push(this.state.editingProduct);
     this.setState({
       products: newProducts,
-      visible: false
+      productsModalVisible: false
+    });
+  };
+  handleOkProfileDetails = e => {
+    console.log(e);
+    this.setState({
+      profileDetailsModalVisible: false
     });
   };
 
-  handleCancel = e => {
+  handleCancelProducts = e => {
     console.log(e);
     this.setState({
-      visible: false
+      productsModalVisible: false
+    });
+  };
+  handleCancelProfileDetails = e => {
+    console.log(e);
+    this.setState({
+      profileDetailsModalVisible: false
     });
   };
 
@@ -86,7 +115,7 @@ class MyAccount extends React.Component {
   };
 
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
+    //const { previewVisible, previewImage, fileList } = this.state;
     // const uploadButton = (
     //   <div>
     //     <Icon type="plus" />
@@ -144,12 +173,57 @@ class MyAccount extends React.Component {
                       marginRight: "20px"
                     }}
                   >
+                    Details Profile
+                  </h2>
+                  <Button type="primary" onClick={this.showModalProfileDetails}>
+                    Edit details
+                  </Button>
+                </div>
+                <List
+                  style={styles.listStyle}
+                  itemLayout="vertical"
+                  size="large"
+                  dataSource={this.state.profileDetails}
+                  renderItem={item => (
+                    <List.Item
+                      key={item.title}
+                      extra={
+                        <img
+                          width={175}
+                          alt="logo"
+                          src="https://previews.123rf.com/images/sergeypykhonin/sergeypykhonin1707/sergeypykhonin170700052/81892309-restaurant-logo-icon-or-symbol-for-design-menu-eatery-canteen-or-cafe-lettering-vector-illustration.jpg"
+                        />
+                      }
+                    >
+                      <List.Item.Meta
+                        avatar={<Avatar src={item.avatar} />}
+                        title={<a href={"/restaurant"}>{item.title}</a>}
+                        description={item.description}
+                      />
+                      {item.content}
+                    </List.Item>
+                  )}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <h2
+                    style={{
+                      textAlign: "center",
+                      display: "inline",
+                      marginRight: "20px"
+                    }}
+                  >
                     Menu
                   </h2>
                   <Button
                     type="primary"
                     style={{ display: "inline" }}
-                    onClick={this.showModal}
+                    onClick={this.showModalProducts}
                   >
                     Add card
                   </Button>
@@ -181,9 +255,9 @@ class MyAccount extends React.Component {
                 <div>
                   <Modal
                     title=""
-                    visible={this.state.visible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
+                    visible={this.state.productsModalVisible}
+                    onOk={this.handleOkProducts}
+                    onCancel={this.handleCancelProducts}
                   >
                     <p>Title:</p>
                     <input
@@ -222,15 +296,14 @@ class MyAccount extends React.Component {
                   </div> */}
                   </Modal>
                   <Modal
-                    visible={previewVisible}
-                    footer={null}
-                    onCancel={this.handleCancel}
+                    title="Basic Modal"
+                    visible={this.state.profileDetailsModalVisible}
+                    onOk={this.handleOkProfileDetails}
+                    onCancel={this.handleCancelProfileDetails}
                   >
-                    <img
-                      alt="example"
-                      style={{ width: "100%" }}
-                      src={previewImage}
-                    />
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
                   </Modal>
                 </div>
               </div>
