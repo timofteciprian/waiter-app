@@ -1,21 +1,22 @@
 import React from "react";
 import { Upload, Icon, Modal, Avatar } from "antd";
 import { Layout, Menu, List, Card, Button } from "antd";
-import { Link } from "react-router-dom";
-import tableReservation from "../../../static/restaurant-table.png";
-import menu from "../../../static/main.png";
+// import { Link } from "react-router-dom";
+// import tableReservation from "../../../static/restaurant-table.png";
+// import menu from "../../../static/main.png";
 
 const { Meta } = Card;
 const { Header, Content } = Layout;
+const { SubMenu } = Menu;
 
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
+// function getBase64(file) {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = () => resolve(reader.result);
+//     reader.onerror = error => reject(error);
+//   });
+// }
 
 class MyAccount extends React.Component {
   state = {
@@ -31,49 +32,52 @@ class MyAccount extends React.Component {
     },
     products: [
       {
+        //id: 1,
         title: "Pizza",
         description:
           "Sos de roșii, salam picant, mozzarella, brânză topită, brânză Gorgonzola, porumb.",
         price: "25 ron",
         image:
-          "http://www.trenta.ro/wp-content/uploads/2012/04/Pizza-Cascavalerii-Gustului-26-cm-si-30-cm.jpg"
+          "https://previews.123rf.com/images/foodandmore/foodandmore1611/foodandmore161100068/65412980-flame-grilled-margherita-italian-pizza-with-fresh-basil-leaves-on-a-thick-biscuit-base-with-mozzarel.jpg"
       }
     ],
-    profileDetails: [
+    editingProfileDetails: {
+      nameRestaurant: "",
+      avatar: "",
+      description: "",
+      image: ""
+    },
+    profilesDetails: [
       {
-        title: "Restaurant",
+        //id: Math.random(),
+        nameRestaurant: "Restaurant",
         avatar:
           "https://previews.123rf.com/images/sergeypykhonin/sergeypykhonin1707/sergeypykhonin170700052/81892309-restaurant-logo-icon-or-symbol-for-design-menu-eatery-canteen-or-cafe-lettering-vector-illustration.jpg",
         description:
           "There aren't enough food, service, value or atmosphere ratings. Be one of the first to write a review!",
-        content:
-          "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently."
+        image:
+          "https://previews.123rf.com/images/sergeypykhonin/sergeypykhonin1707/sergeypykhonin170700052/81892309-restaurant-logo-icon-or-symbol-for-design-menu-eatery-canteen-or-cafe-lettering-vector-illustration.jpg"
       }
     ]
   };
-  handleCancel = () => this.setState({ previewVisible: false });
 
-  handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
+  // handlePreview = async file => {
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getBase64(file.originFileObj);
+  //   }
+  //   this.setState({
+  //     previewImage: file.url || file.preview,
+  //     previewVisible: true
+  //   });
+  // };
 
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true
-    });
-  };
+  // handleChange = ({ fileList }) => this.setState({ fileList });
 
-  handleChange = ({ fileList }) => this.setState({ fileList });
+  // handleCancel = () => this.setState({ previewVisible: false });
 
   showModalProducts = () => {
     this.setState({
       productsModalVisible: true
-    });
-  };
-  showModalProfileDetails = () => {
-    this.setState({
-      profileDetailsModalVisible: true
     });
   };
 
@@ -85,12 +89,6 @@ class MyAccount extends React.Component {
       productsModalVisible: false
     });
   };
-  handleOkProfileDetails = e => {
-    console.log(e);
-    this.setState({
-      profileDetailsModalVisible: false
-    });
-  };
 
   handleCancelProducts = e => {
     console.log(e);
@@ -98,14 +96,7 @@ class MyAccount extends React.Component {
       productsModalVisible: false
     });
   };
-  handleCancelProfileDetails = e => {
-    console.log(e);
-    this.setState({
-      profileDetailsModalVisible: false
-    });
-  };
-
-  onAttributeChange = (propertyName, value) => {
+  onAttributeProductChange = (propertyName, value) => {
     this.setState({
       editingProduct: {
         ...this.state.editingProduct,
@@ -113,7 +104,41 @@ class MyAccount extends React.Component {
       }
     });
   };
+  showModalProfileDetails = () => {
+    this.setState({
+      profileDetailsModalVisible: true
+    });
+  };
 
+  handleOkProfileDetails = e => {
+    const newProfilesDetails = this.state.profilesDetails.slice();
+    newProfilesDetails.push(this.state.editingProfileDetails);
+    console.log(this.state.editingProduct);
+    this.setState({
+      profilesDetails: newProfilesDetails,
+      profileDetailsModalVisible: false
+    });
+  };
+
+  handleCancelProfileDetails = e => {
+    console.log(e);
+    this.setState({
+      profileDetailsModalVisible: false
+    });
+  };
+
+  onAttributeProfileChange = (propertyName, value) => {
+    console.log(value);
+    this.setState({
+      editingProfileDetails: {
+        ...this.state.editingProfileDetails,
+        [propertyName]: value
+      }
+    });
+  };
+  handleClick = e => {
+    console.log("click ", e);
+  };
   render() {
     //const { previewVisible, previewImage, fileList } = this.state;
     // const uploadButton = (
@@ -122,41 +147,14 @@ class MyAccount extends React.Component {
     //     <div className="ant-upload-text">Upload</div>
     //   </div>
     // );
+
     return (
       <div>
         <div style={styles.divStyle}>
           <Layout className="layout">
-            <Header style={styles.headerStyle}>
-              <div className="logo" />
-
-              <Menu
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={["2"]}
-                style={styles.divStyle}
-              >
-                <Menu.Item>
-                  <Link to="/restaurant/reservationTable">
-                    <img
-                      src={tableReservation}
-                      alt="table"
-                      style={{ margin: 20, width: "50px" }}
-                    />
-                    Reservation the table
-                  </Link>
-                </Menu.Item>
-                <Menu.Item>
-                  <Link to="/restaurant/menu">
-                    <img
-                      src={menu}
-                      alt="menu"
-                      style={{ margin: 20, width: "50px" }}
-                    />
-                    Menu
-                  </Link>
-                </Menu.Item>
-              </Menu>
-            </Header>
+            {/* <Header style={styles.headerStyle} >
+              s
+            </Header> */}
             <Content>
               <div>
                 <div
@@ -178,29 +176,54 @@ class MyAccount extends React.Component {
                   <Button type="primary" onClick={this.showModalProfileDetails}>
                     Edit details
                   </Button>
+                  <Modal
+                    title=""
+                    visible={this.state.profileDetailsModalVisible}
+                    onOk={this.handleOkProfileDetails}
+                    onCancel={this.handleCancelProfileDetails}
+                  >
+                    <p>Name Restaurant:</p>
+                    <input
+                      type="text"
+                      onChange={e =>
+                        this.onAttributeProfileChange(
+                          "nameRestaurant",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <p>Avatar:</p>
+                    <input type="text" />
+                    <p>Description:</p>
+                    <input
+                      type="text"
+                      onChange={e =>
+                        this.onAttributeProfileChange(
+                          "description",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <p>Image:</p>
+                  </Modal>
                 </div>
                 <List
                   style={styles.listStyle}
                   itemLayout="vertical"
                   size="large"
-                  dataSource={this.state.profileDetails}
+                  dataSource={this.state.profilesDetails}
                   renderItem={item => (
                     <List.Item
-                      key={item.title}
-                      extra={
-                        <img
-                          width={175}
-                          alt="logo"
-                          src="https://previews.123rf.com/images/sergeypykhonin/sergeypykhonin1707/sergeypykhonin170700052/81892309-restaurant-logo-icon-or-symbol-for-design-menu-eatery-canteen-or-cafe-lettering-vector-illustration.jpg"
-                        />
-                      }
+                      key=""
+                      extra={<img width={175} alt="logo" src={item.image} />}
                     >
                       <List.Item.Meta
                         avatar={<Avatar src={item.avatar} />}
-                        title={<a href={"/restaurant"}>{item.title}</a>}
-                        description={item.description}
+                        title={
+                          <a href={"/restaurant"}>{item.nameRestaurant}</a>
+                        }
                       />
-                      {item.content}
+                      {item.description}
                     </List.Item>
                   )}
                 />
@@ -227,6 +250,51 @@ class MyAccount extends React.Component {
                   >
                     Add card
                   </Button>
+                  <Modal
+                    title=""
+                    visible={this.state.productsModalVisible}
+                    onOk={this.handleOkProducts}
+                    onCancel={this.handleCancelProducts}
+                  >
+                    <p>Title:</p>
+                    <input
+                      type="text"
+                      onChange={e =>
+                        this.onAttributeProductChange("title", e.target.value)
+                      }
+                    />
+                    <p>Description:</p>
+                    <input
+                      type="text"
+                      onChange={e =>
+                        this.onAttributeProductChange(
+                          "description",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <p>Price:</p>
+                    <input
+                      type="text"
+                      onChange={e =>
+                        this.onAttributeProductChange("price", e.target.value)
+                      }
+                    />
+                    <p>Image:</p>
+                    {/* <input type="file" onChange={this.fileSelectedHendler} />
+        <button onClick={this.fileUploadHendler}>Upload</button> */}
+
+                    {/* <div className="clearfix">
+                    <Upload
+                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                      listType="picture-card"
+                      onPreview={this.handlePreview}
+                      onChange={this.handleChange}
+                    >
+                      {uploadButton}
+                    </Upload>
+                  </div> */}
+                  </Modal>
                 </div>
                 <List
                   grid={{ gutter: 12, column: 3 }}
@@ -252,60 +320,6 @@ class MyAccount extends React.Component {
                     </List.Item>
                   )}
                 />
-                <div>
-                  <Modal
-                    title=""
-                    visible={this.state.productsModalVisible}
-                    onOk={this.handleOkProducts}
-                    onCancel={this.handleCancelProducts}
-                  >
-                    <p>Title:</p>
-                    <input
-                      type="text"
-                      onChange={e =>
-                        this.onAttributeChange("title", e.target.value)
-                      }
-                    />
-                    <p>Description:</p>
-                    <input
-                      type="text"
-                      onChange={e =>
-                        this.onAttributeChange("description", e.target.value)
-                      }
-                    />
-                    <p>Price:</p>
-                    <input
-                      type="text"
-                      onChange={e =>
-                        this.onAttributeChange("price", e.target.value)
-                      }
-                    />
-                    <p>Image:</p>
-                    {/* <input type="file" onChange={this.fileSelectedHendler} />
-        <button onClick={this.fileUploadHendler}>Upload</button> */}
-
-                    {/* <div className="clearfix">
-                    <Upload
-                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                      listType="picture-card"
-                      onPreview={this.handlePreview}
-                      onChange={this.handleChange}
-                    >
-                      {uploadButton}
-                    </Upload>
-                  </div> */}
-                  </Modal>
-                  <Modal
-                    title="Basic Modal"
-                    visible={this.state.profileDetailsModalVisible}
-                    onOk={this.handleOkProfileDetails}
-                    onCancel={this.handleCancelProfileDetails}
-                  >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                  </Modal>
-                </div>
               </div>
             </Content>
           </Layout>
@@ -324,7 +338,7 @@ const styles = {
     flexWrap: "wrap"
   },
   listStyle: {
-    width: "900px",
+    width: "450px",
     marginLeft: "250px"
   },
   divStyle: {
