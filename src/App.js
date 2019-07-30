@@ -9,8 +9,12 @@ import RegistrationRestaurantForm from "./app/components/auth/RegisterRestaurant
 import Restaurant from "./app/components/restaurant/Restaurant";
 import ReservationTable from "./app/components/restaurant/ReservationTable";
 import MenuRestaurant from "./app/components/restaurant/MenuRestaurant";
-import MyAccount from "./app/components/myAccount/MyAccount";
+//import MyAccount from "./app/components/myAccount/MyAccount";
 import Navbar from "./app/components/Navbar";
+import Sider from "./app/components/myAccount/Sider";
+import Dashboard from "./app/components/myAccount/Dashboard";
+import AddItem from "./app/components/myAccount/menu/AddItemMenu";
+import ListMenu from "./app/components/myAccount/menu/ListMenu";
 
 function App() {
   return (
@@ -30,7 +34,11 @@ function App() {
           component={ReservationTable}
         />
         <Route path="/restaurant/menu" component={MenuRestaurant} />
-        <Route path="/myAccount" component={MyAccount} />
+        {/* <Route path="/myAccount" component={MyAccount} /> */}
+        <Route exact path="/myAccount" component={Sider} />
+        <Route path="/myAccount/dashboard" component={Dashboard} />
+        <Route path="/myAccount/addItem" component={AddItem} />
+        <Route path="/myAccount/listMenu" component={ListMenu} />
       </Switch>
     </div>
   );
