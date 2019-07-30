@@ -30,7 +30,7 @@ export default class Navbar extends React.Component {
                 <Link to="/login">Login</Link>
               </Menu.Item>
               <Menu.Item>
-                <Link to="/myAccount">My Account</Link>
+                <Link to="/myAccount/dashboard">My Account</Link>
               </Menu.Item>
             </Menu>
           </Header>
