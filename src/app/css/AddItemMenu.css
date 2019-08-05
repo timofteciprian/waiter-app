@@ -1,0 +1,82 @@
+.totalItem {
+  background-color: #ffffff;
+}
+
+.titleTotalItem {
+  color: #66666a;
+  font-family: "SF Pro Text";
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+  line-height: 150px;
+
+  /* line-height: 148px; */
+}
+.totalItemNumber {
+  background-color: #4672b8;
+  color: #ffffff;
+  font-family: "SF Pro Display";
+  font-size: 50px;
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  line-height: 150px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.active {
+  background-color: #ffffff;
+}
+
+.titleActive {
+  color: #66666a;
+  font-family: "SF Pro Text";
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+  line-height: 150px;
+
+  /* line-height: 148px; */
+}
+
+.totalActiveNumber {
+  background-color: #00bfb2;
+  color: #ffffff;
+  font-family: "SF Pro Display";
+  font-size: 50px;
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  line-height: 150px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.innactive {
+  background-color: #ffffff;
+}
+
+.titleInnactive {
+  color: #66666a;
+  font-family: "SF Pro Text";
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+  line-height: 150px;
+
+  /* line-height: 148px; */
+}
+
+.totalInnactiveNumber {
+  background-color: #ff6060;
+  color: #ffffff;
+  font-family: "SF Pro Display";
+  font-size: 50px;
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  line-height: 150px;
+  text-align: center;
+  margin-bottom: 0;
+}
