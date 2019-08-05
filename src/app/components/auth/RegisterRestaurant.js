@@ -1,21 +1,46 @@
 import React from "react";
-import { Form, Input, Select, Checkbox, Button } from "antd";
-
-const { Option } = Select;
+import { Form, Input, Checkbox, Button } from "antd";
+import axios from "axios";
 
 class RegisterRestaurant extends React.Component {
-  state = {
-    confirmDirty: false,
-    autoCompleteResult: []
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      role: "admin",
+      confirmDirty: false,
+      autoCompleteResult: []
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChangeEmail = event => {
+    this.setState({
+      ...this.state,
+      email: event.target.value
+    });
+  };
+  handleChangePassword = event => {
+    this.setState({
+      ...this.state,
+      password: event.target.value
+    });
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log("Received values of form: ", values);
-      }
-    });
+  handleSubmit = event => {
+    event.preventDefault();
+    const { email, password, role } = this.state;
+    console.log({ email, password, role });
+    axios
+      .post(`http://localhost:3000/users/addUser`, { email, password, role })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   handleConfirmBlur = e => {
@@ -69,14 +94,6 @@ class RegisterRestaurant extends React.Component {
         }
       }
     };
-    const prefixSelector = getFieldDecorator("prefix", {
-      initialValue: "86"
-    })(
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    );
 
     return (
       <div style={styles.divStyle}>
@@ -98,7 +115,7 @@ class RegisterRestaurant extends React.Component {
                   message: "Please input your E-mail!"
                 }
               ]
-            })(<Input />)}
+            })(<Input onChange={this.handleChangeEmail} />)}
           </Form.Item>
           <Form.Item label="Password" hasFeedback>
             {getFieldDecorator("password", {
@@ -111,7 +128,7 @@ class RegisterRestaurant extends React.Component {
                   validator: this.validateToNextPassword
                 }
               ]
-            })(<Input.Password />)}
+            })(<Input.Password onChange={this.handleChangePassword} />)}
           </Form.Item>
           <Form.Item label="Confirm Password" hasFeedback>
             {getFieldDecorator("confirm", {
@@ -125,36 +142,6 @@ class RegisterRestaurant extends React.Component {
                 }
               ]
             })(<Input.Password onBlur={this.handleConfirmBlur} />)}
-          </Form.Item>
-          <Form.Item label="Name" hasFeedback>
-            {getFieldDecorator("name", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your nickname!",
-                  whitespace: true
-                }
-              ]
-            })(<Input />)}
-          </Form.Item>
-          <Form.Item label="Adress">
-            {getFieldDecorator("address", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your nickname!"
-                }
-              ]
-            })(<Input />)}
-          </Form.Item>
-          <Form.Item label="Phone Number">
-            {getFieldDecorator("phone", {
-              rules: [
-                { required: true, message: "Please input your phone number!" }
-              ]
-            })(
-              <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
-            )}
           </Form.Item>
 
           <Form.Item {...tailFormItemLayout}>
