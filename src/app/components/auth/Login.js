@@ -1,41 +1,76 @@
 import React from "react";
-import { Form, Icon, Input, Button, Checkbox, Dropdown, Menu } from "antd";
+import { Form, Icon, Input, Button, Checkbox } from "antd";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
+import openNotification from "../utils/utils";
 
 class Login extends React.Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log("Received values of form: ", values);
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      authUser: null,
+      email: "",
+      password: "",
+      redirect: false
+    };
+    //handleSubmit = this.handleSubmit.bind();
+  }
+
+  handleChangeEmail = event => {
+    this.setState({
+      ...this.state,
+      email: event.target.value
     });
   };
 
-  routesForReister = (
-    <Menu>
-      <Menu.Item key="0">
-        <a href="/register ">Register client</a>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="1">
-        <a href="/registerRestaurant">Register restaurant</a>
-      </Menu.Item>
-    </Menu>
-  );
+  handleChangePassword = event => {
+    this.setState({
+      ...this.state,
+      password: event.target.value
+    });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const { email, password } = this.state;
+
+    axios
+      .post(`http://localhost:3000/users/login`, { email, password })
+      .then(res => {
+        this.setState({ redirect: true });
+        // this.setState({ authUser });
+        // localStorage.setItem("authUser", JSON.stringify(this.state.authUser));
+        console.log("ok");
+      })
+      .catch(err => {
+        console.log("err data:", err.response.data);
+        console.log("err.status:", err.response.status);
+        console.log("err:", err.response);
+        openNotification(
+          err.response.data.message + " " + err.response.status,
+          "",
+          "frown"
+        );
+      });
+  };
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/home" />;
+    }
+
     const { getFieldDecorator } = this.props.form;
     return (
       <div style={styles.divStyle}>
         <h1 style={styles.titleStyle}>Sign in</h1>
         <div>
           <Form
-            onSubmit={this.handleSubmit}
+            // onSubmit={this.handleSubmit}
             className="login-form"
             style={styles.formStyle}
           >
             <Form.Item>
-              {getFieldDecorator("username", {
+              {getFieldDecorator("email", {
                 rules: [
                   { required: true, message: "Please input your username!" }
                 ]
@@ -44,7 +79,8 @@ class Login extends React.Component {
                   prefix={
                     <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
-                  placeholder="Username"
+                  placeholder="Email"
+                  onChange={this.handleChangeEmail}
                 />
               )}
             </Form.Item>
@@ -60,9 +96,11 @@ class Login extends React.Component {
                   }
                   type="password"
                   placeholder="Password"
+                  onChange={this.handleChangePassword}
                 />
               )}
             </Form.Item>
+
             <Form.Item>
               {getFieldDecorator("remember", {
                 valuePropName: "checked",
@@ -72,20 +110,18 @@ class Login extends React.Component {
                 Forgot password
               </a>
               <Button
-                //href="#"
+                href=""
                 type="primary"
                 htmlType="submit"
                 className="login-form-button"
+                onClick={this.handleSubmit}
               >
                 Sign in
               </Button>
               <div style={{ textAlign: "center" }}>
                 <p>Or </p>
-                <Dropdown overlay={this.routesForReister} trigger={["click"]}>
-                  <a className="ant-dropdown-link" href>
-                    Register <Icon type="down" />
-                  </a>
-                </Dropdown>
+
+                <a href="/register">Register restaurant</a>
               </div>
             </Form.Item>
           </Form>
