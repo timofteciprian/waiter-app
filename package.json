@@ -10,6 +10,7 @@
     "faker": "^4.1.0",
     "google-maps-react": "^2.0.2",
     "immutability-helper": "^3.0.1",
+    "local-storage": "^2.0.0",
     "react": "^16.8.6",
     "react-dnd": "^9.3.2",
     "react-dnd-cjs": "^9.3.3",
