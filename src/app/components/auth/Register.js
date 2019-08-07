@@ -1,8 +1,12 @@
 import React from "react";
-import { Form, Input, Checkbox, Button } from "antd";
+import { Form, Input, Checkbox, Button, Row, Col, Icon } from "antd";
 import axios from "axios";
+import logo from "../../../static/logo.svg";
+import imageLogin from "../../../static/imageLogin.png";
+import "../../css/Register.css";
+import ResponsiveImage from "../utils/ResponsiveImage";
 
-class RegisterRestaurant extends React.Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,118 +76,126 @@ class RegisterRestaurant extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      }
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0
-        },
-        sm: {
-          span: 16,
-          offset: 8
-        }
-      }
-    };
-
     return (
-      <div style={styles.divStyle}>
-        <h1 style={styles.titleStyle}>Registration restaurant</h1>
-        <Form
-          {...formItemLayout}
-          onSubmit={this.handleSubmit}
-          style={styles.formStyle}
-        >
-          <Form.Item label="E-mail">
-            {getFieldDecorator("email", {
-              rules: [
-                {
-                  type: "email",
-                  message: "The input is not valid E-mail!"
-                },
-                {
-                  required: true,
-                  message: "Please input your E-mail!"
-                }
-              ]
-            })(<Input onChange={this.handleChangeEmail} />)}
-          </Form.Item>
-          <Form.Item label="Password" hasFeedback>
-            {getFieldDecorator("password", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your password!"
-                },
-                {
-                  validator: this.validateToNextPassword
-                }
-              ]
-            })(<Input.Password onChange={this.handleChangePassword} />)}
-          </Form.Item>
-          <Form.Item label="Confirm Password" hasFeedback>
-            {getFieldDecorator("confirm", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please confirm your password!"
-                },
-                {
-                  validator: this.compareToFirstPassword
-                }
-              ]
-            })(<Input.Password onBlur={this.handleConfirmBlur} />)}
-          </Form.Item>
+      <div>
+        <Row type="flex">
+          <Col xs={24} sm={24} md={24} lg={17} xl={17}>
+            <ResponsiveImage src={imageLogin} width={1140} height={800} />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={7} xl={7}>
+            <div style={{ padding: "30px" }}>
+              <ResponsiveImage src={logo} width={190} height={160} />
+              <div style={{ padding: "30px" }}>
+                <span style={{ fontSize: "34px" }}>din </span>
+                <span style={{ fontSize: "34px", color: "#FF6043" }}>out.</span>
+                <p className="description">
+                  Din out restaurant management page.
+                </p>
+              </div>
+              <Form onSubmit={this.handleSubmit} className="register-form">
+                <Form.Item>
+                  {getFieldDecorator("email", {
+                    rules: [
+                      {
+                        type: "email",
+                        message: "The input is not valid E-mail!"
+                      },
+                      {
+                        required: true,
+                        message: "Please input your E-mail!"
+                      }
+                    ]
+                  })(
+                    <Input
+                      prefix={
+                        <Icon
+                          type="user"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
+                      }
+                      placeholder="Email address"
+                      onChange={this.handleChangeEmail}
+                    />
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  {getFieldDecorator("password", {
+                    rules: [
+                      {
+                        required: true,
+                        message: "Please input your password!"
+                      },
+                      {
+                        validator: this.validateToNextPassword
+                      }
+                    ]
+                  })(
+                    <Input.Password
+                      prefix={
+                        <Icon
+                          type="lock"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
+                      }
+                      type="password"
+                      placeholder="Password"
+                      onChange={this.handleChangePassword}
+                    />
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  {getFieldDecorator("confirm", {
+                    rules: [
+                      {
+                        required: true,
+                        message: "Please confirm your password!"
+                      },
+                      {
+                        validator: this.compareToFirstPassword
+                      }
+                    ]
+                  })(
+                    <Input.Password
+                      prefix={
+                        <Icon
+                          type="lock"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
+                      }
+                      type="password"
+                      placeholder="Password"
+                      onBlur={this.handleConfirmBlur}
+                    />
+                  )}
+                </Form.Item>
 
-          <Form.Item {...tailFormItemLayout}>
-            {getFieldDecorator("agreement", {
-              valuePropName: "checked"
-            })(
-              <Checkbox>
-                I have read the <a href="/">agreement</a>
-              </Checkbox>
-            )}
-          </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
-              Register
-            </Button>
-          </Form.Item>
-        </Form>
+                <Form.Item>
+                  {getFieldDecorator("agreement", {
+                    valuePropName: "checked"
+                  })(
+                    <Checkbox>
+                      I have read the <a href="/">agreement</a>
+                    </Checkbox>
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    className="buttonRegister"
+                    type="primary"
+                    htmlType="submit"
+                    block
+                  >
+                    Register
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          </Col>
+        </Row>
       </div>
     );
   }
 }
 
-const RegistrationRestaurantForm = Form.create({ name: "register" })(
-  RegisterRestaurant
-);
-export default RegistrationRestaurantForm;
-
-const styles = {
-  titleStyle: {
-    display: "flex",
-    marginLeft: "150px",
-    marginTop: "50px"
-  },
-  divStyle: {
-    marginLeft: "450px",
-    width: "50%",
-    height: "10%"
-  },
-
-  formStyle: {
-    textAlign: "center",
-    width: "65%",
-    marginTop: "75px"
-  }
-};
+const RegistrationForm = Form.create({ name: "register" })(Register);
+export default RegistrationForm;
