@@ -1,8 +1,12 @@
 import React from "react";
-import { Form, Icon, Input, Button, Checkbox } from "antd";
+import { Form, Icon, Input, Button, Row, Col } from "antd";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import openNotification from "../utils/utils";
+import openNotification from "../utils/OpenNotification";
+import "../../css/Login.css";
+import logo from "../../../static/logo.svg";
+import imageLogin from "../../../static/imageLogin.png";
+import ResponsiveImage from "../utils/ResponsiveImage";
 
 class Login extends React.Component {
   constructor(props) {
@@ -37,15 +41,13 @@ class Login extends React.Component {
     axios
       .post(`http://localhost:3000/users/login`, { email, password })
       .then(res => {
-        this.setState({ redirect: true });
-        // this.setState({ authUser });
-        // localStorage.setItem("authUser", JSON.stringify(this.state.authUser));
+        console.log(res.data);
+        localStorage.setItem("userToken", JSON.stringify(res.data.token));
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         console.log("ok");
+        this.setState({ redirect: true });
       })
       .catch(err => {
-        console.log("err data:", err.response.data);
-        console.log("err.status:", err.response.status);
-        console.log("err:", err.response);
         openNotification(
           err.response.data.message + " " + err.response.status,
           "",
@@ -58,74 +60,92 @@ class Login extends React.Component {
     if (this.state.redirect) {
       return <Redirect to="/home" />;
     }
-
     const { getFieldDecorator } = this.props.form;
     return (
-      <div style={styles.divStyle}>
-        <h1 style={styles.titleStyle}>Sign in</h1>
-        <div>
-          <Form
-            // onSubmit={this.handleSubmit}
-            className="login-form"
-            style={styles.formStyle}
-          >
-            <Form.Item>
-              {getFieldDecorator("email", {
-                rules: [
-                  { required: true, message: "Please input your username!" }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Email"
-                  onChange={this.handleChangeEmail}
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator("password", {
-                rules: [
-                  { required: true, message: "Please input your Password!" }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  type="password"
-                  placeholder="Password"
-                  onChange={this.handleChangePassword}
-                />
-              )}
-            </Form.Item>
-
-            <Form.Item>
-              {getFieldDecorator("remember", {
-                valuePropName: "checked",
-                initialValue: true
-              })(<Checkbox>Remember me</Checkbox>)}
-              <a className="login-form-forgot" href="/">
-                Forgot password
-              </a>
-              <Button
-                href=""
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                onClick={this.handleSubmit}
-              >
-                Sign in
-              </Button>
-              <div style={{ textAlign: "center" }}>
-                <p>Or </p>
-
-                <a href="/register">Register restaurant</a>
+      <div>
+        <Row type="flex">
+          <Col xs={24} sm={24} md={24} lg={17} xl={17}>
+            <ResponsiveImage src={imageLogin} width={1140} height={800} />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={7} xl={7}>
+            <div style={{ padding: "30px" }}>
+              <ResponsiveImage src={logo} width={190} height={160} />
+              <div>
+                <span style={{ fontSize: "34px" }}>din </span>
+                <span style={{ fontSize: "34px", color: "#FF6043" }}>out.</span>
+                <p className="description">
+                  Din out restaurant management page.
+                </p>
               </div>
-            </Form.Item>
-          </Form>
-        </div>
+              <div>
+                <Form className="login-form">
+                  <Form.Item>
+                    {getFieldDecorator("email", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Please input your username!"
+                        }
+                      ]
+                    })(
+                      <Input
+                        prefix={
+                          <Icon
+                            type="user"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        placeholder="Email"
+                        onChange={this.handleChangeEmail}
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item>
+                    {getFieldDecorator("password", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Please input your Password!"
+                        }
+                      ]
+                    })(
+                      <Input
+                        prefix={
+                          <Icon
+                            type="lock"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        type="password"
+                        placeholder="Password"
+                        onChange={this.handleChangePassword}
+                      />
+                    )}
+                  </Form.Item>
+
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      className="login-form-button"
+                      onClick={this.handleSubmit}
+                      href="/home"
+                    >
+                      Sign in
+                    </Button>
+                    <div>
+                      <a className="create-account" href="/register">
+                        Create account
+                      </a>
+                      <a className="login-form-forgot" href="/">
+                        Forgot password
+                      </a>
+                    </div>
+                  </Form.Item>
+                </Form>
+              </div>
+            </div>
+          </Col>
+        </Row>
       </div>
     );
   }
@@ -134,21 +154,21 @@ class Login extends React.Component {
 const LoginForm = Form.create({ name: "normal_login" })(Login);
 export default LoginForm;
 
-const styles = {
-  titleStyle: {
-    display: "flex",
-    marginLeft: "190px",
-    marginTop: "50px"
-  },
-  divStyle: {
-    marginLeft: "450px",
-    width: "50%",
-    height: "10%"
-  },
+// const styles = {
+//   titleStyle: {
+//     display: "flex",
+//     marginLeft: "190px",
+//     marginTop: "50px"
+//   },
+//   divStyle: {
+//     marginLeft: "450px",
+//     width: "50%",
+//     height: "10%"
+//   },
 
-  formStyle: {
-    textAlign: "center",
-    width: "65%",
-    marginTop: "75px"
-  }
-};
+//   formStyle: {
+//     textAlign: "center",
+//     width: "65%",
+//     marginTop: "75px"
+//   }
+// };
