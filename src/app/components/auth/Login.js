@@ -42,12 +42,13 @@ class Login extends React.Component {
       .post(`http://localhost:3000/users/login`, { email, password })
       .then(res => {
         console.log(res.data);
-        localStorage.setItem("userToken", JSON.stringify(res.data.token));
+        localStorage.setItem("userToken", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         console.log("ok");
         this.setState({ redirect: true });
       })
       .catch(err => {
+        console.log(err.data);
         openNotification(
           err.response.data.message + " " + err.response.status,
           "",
