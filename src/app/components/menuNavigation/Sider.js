@@ -19,7 +19,7 @@ class SiderContent extends React.Component {
         className="menu"
         mode="inline"
       >
-        <Menu.Item key="012">
+        <Menu.Item key="10">
           <span>
             <Icon type="home" />
             <a href="/home">Home</a>
@@ -30,24 +30,27 @@ class SiderContent extends React.Component {
           title={
             <span>
               <Icon type="calendar" />
-              <span>Menu Management</span>
+              <span>Management</span>
             </span>
           }
         >
-          <Menu.ItemGroup key="g1">
-            <Menu.Item key="01">
-              <a href="/menuManagement/addItem">Add item</a>
+          <Menu.ItemGroup key="11">
+            <Menu.Item key="1">
+              <a href="/management/menuSetup">Menu Setup</a>
             </Menu.Item>
             <Menu.Item key="2">
-              <a href="/menuManagement/listMenu">List menu</a>
+              <a href="/management/itemList">Item List</a>
+            </Menu.Item>
+            <Menu.Item key="3">
+              <a href="/management/tables">Tables</a>
             </Menu.Item>
           </Menu.ItemGroup>
         </SubMenu>
 
-        <Menu.Item key="0111">
+        <Menu.Item key="111">
           <span>
             <Icon type="setting" />
-            <a href="/menuManagement/account">Account</a>
+            <a href="/account">Account</a>
           </span>
         </Menu.Item>
       </Menu>
