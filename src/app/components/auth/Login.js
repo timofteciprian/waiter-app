@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Icon, Input, Button, Row, Col } from "antd";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import openNotification from "../utils/OpenNotification";
+//import openNotification from "../utils/OpenNotification";
 import "../../css/Login.css";
 import logo from "../../../static/logo.svg";
 import imageLogin from "../../../static/imageLogin.png";
@@ -44,16 +44,17 @@ class Login extends React.Component {
         console.log(res.data);
         localStorage.setItem("userToken", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("userId", res.data.user._id);
         console.log("ok");
         this.setState({ redirect: true });
       })
       .catch(err => {
         console.log(err.data);
-        openNotification(
-          err.response.data.message + " " + err.response.status,
-          "",
-          "frown"
-        );
+        // openNotification(
+        //   err.response.data.message + " " + err.response.status,
+        //   "",
+        //   "frown"
+        // );
       });
   };
 
