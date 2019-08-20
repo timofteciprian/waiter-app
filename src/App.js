@@ -1,20 +1,16 @@
 import React from "react";
-
-import "./App.css";
+import "./app/css/App.css";
 import "antd/dist/antd.css";
 import { Route, Redirect, Switch } from "react-router-dom";
-import { Layout } from "antd";
 import LoginForm from "./app/components/auth/Login";
-import RegistrationForm from "./app/components/auth/Register";
-import SiderContent from "./app/components/menuNavigation/Sider";
-import Account from "./app/components/menuNavigation/Account";
-import AddItem from "./app/components/menuNavigation/management/MenuCategories";
+import RegisterForm from "./app/components/auth/Register";
+import Account from "./app/components/menuNavigation/account/Account";
+import MenuSetup from "./app/components/menuNavigation/management/menuSetup/MenuSetup";
 import ItemList from "./app/components/menuNavigation/management/ItemList";
-import HeaderContent from "./app/components/menuNavigation/Header";
 import Home from "./app/components/menuNavigation/home/Home";
+import Tables from "./app/components/menuNavigation/management/Tables";
+import AppLayout from "./app/components/AppLayout";
 //import backgroundImg from "./static/Din-out-logo.png";
-
-const { Header, Sider, Content } = Layout;
 
 const PrivateRoute = ({ component: Component, authed, ...rest }) => {
   return (
@@ -22,20 +18,9 @@ const PrivateRoute = ({ component: Component, authed, ...rest }) => {
       {...rest}
       render={props =>
         authed === true ? (
-          <Layout>
-            <Header style={{ padding: "0" }}>
-              <HeaderContent />
-            </Header>
-            <Layout>
-              <Sider>
-                {" "}
-                <SiderContent />
-              </Sider>
-              <Content>
-                <Component {...props} authed={authed} />
-              </Content>
-            </Layout>
-          </Layout>
+          <AppLayout>
+            <Component {...props} authed={authed} />
+          </AppLayout>
         ) : (
           <Redirect
             to={{
@@ -78,7 +63,7 @@ export default class App extends React.Component {
           <PublicRoute
             authed={authenticated}
             path="/register"
-            component={RegistrationForm}
+            component={RegisterForm}
           />
           <PrivateRoute
             authed={authenticated}
@@ -88,18 +73,23 @@ export default class App extends React.Component {
           />
           <PrivateRoute
             authed={authenticated}
-            path="/menuManagement/account"
+            path="/account"
             component={Account}
           />
           <PrivateRoute
             authed={authenticated}
-            path="/menuManagement/addItem"
-            component={AddItem}
+            path="/management/menuSetup"
+            component={MenuSetup}
           />
           <PrivateRoute
             authed={authenticated}
-            path="/menuManagement/listMenu"
+            path="/management/itemList"
             component={ItemList}
+          />
+          <PrivateRoute
+            authed={authenticated}
+            path="/management/tables"
+            component={Tables}
           />
         </Switch>
       </div>
