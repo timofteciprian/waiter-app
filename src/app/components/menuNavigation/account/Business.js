@@ -1,25 +1,21 @@
 import React from "react";
 import axios from "axios";
-import { Input, Upload, Icon, Button, Modal } from "antd";
+import { Input, Upload, Icon, Button, Modal, message } from "antd";
+import { storageRef } from "../../../lib/firebase";
 import "../../../css/Account.css";
 
 //import openNotification from "../utils/OpenNotification";
 
 const { TextArea } = Input;
 
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
 class Business extends React.Component {
   state = {
-    loading: false,
-    confirmDirty: false,
-    autoCompleteResult: [],
     previewVisible: false,
     previewImage: "",
+    fileList: [],
+    loadingLogo: false,
+    confirmDirty: false,
+    logoUrl: "",
     type: "",
     restaurantTypes: [
       "Indian",
@@ -30,111 +26,62 @@ class Business extends React.Component {
       "Chinese",
       "Traditional"
     ],
-    profileDetails: {},
+    profileDetails: {
+      description: "",
+      country: "",
+      city: "",
+      address: "",
+      postalCode: 0,
+      logo: "",
+      images: [],
+      openAt: 0,
+      closingAt: 0
+    },
     restaurantId: "",
-    userToken: ""
+    token: "",
+    userId: ""
   };
 
   componentDidMount() {
     this.getRestaurant();
   }
 
-  handleChange = info => {
-    if (info.file.status === "uploading") {
-      this.setState({ loading: true });
-      return;
-    }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, imageUrl =>
-        this.setState({
-          imageUrl,
-          loading: false
-        })
-      );
-    }
-  };
-  handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true
-    });
-  };
-
-  handleChangeImage = ({ fileList }) => this.setState({ fileList });
-
-  editDetailsRestaurant = () => {
-    const {
-      profileDetails: {
-        restaurantType,
-        restaurantName,
-        restaurantDescription,
-        county,
-        city,
-        postalCode,
-        streetAddress
-      },
-      restaurantId,
-      userToken
-    } = this.state;
-
-    axios
-      .patch(
-        `http://localhost:3000/restaurants/${restaurantId}`,
-        {
-          restaurantType,
-          restaurantName,
-          restaurantDescription,
-          county,
-          city,
-          postalCode,
-          streetAddress
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`
-          }
-        }
-      )
-      .then(res => {
-        console.log("responseEdit:", res.data);
-      })
-      .catch(err => {
-        console.log("errrr:", err.response);
-        // openNotification(
-        //   err.response.data.message + " " + err.response.status,
-        //   "",
-        //   "frown"
-        // );
-      });
-  };
-
   initialDetailsRestaurant = () => {
+    this.setState({
+      profileDetails: {
+        openAt: 10,
+        closingAt: 22
+      }
+    });
     const {
       profileDetails: {
-        restaurantType,
-        restaurantName,
-        restaurantDescription,
-        county,
+        name,
+        description,
+        country,
         city,
+        address,
         postalCode,
-        streetAddress
+        //logo,
+        // images,
+        openAt,
+        closingAt
       }
     } = this.state;
-    const token = localStorage.getItem("userToken");
+    const token = localStorage.getItem("token");
     axios
       .post(
-        `http://localhost:3000/restaurants/addRestaurant`,
+        `http://localhost:9000/restaurants`,
         {
-          restaurantType,
-          restaurantName,
-          restaurantDescription,
-          county,
+          name,
+          description,
+          country,
           city,
+          address,
           postalCode,
-          streetAddress
+          //logo,
+          // images,
+          openAt,
+          closingAt
         },
         {
           headers: {
@@ -144,23 +91,67 @@ class Business extends React.Component {
       )
       .then(res => {
         console.log("response initial details request", res.data);
-        localStorage.setItem("restaurantId", res.data._id);
-        this.setState({ restaurantId: res.data._id });
+        localStorage.setItem("restaurantId", res.data.id);
+        this.getRestaurant();
       })
       .catch(err => {
-        console.log(err.response);
-        // openNotification(
-        //   err.response.data.message + " " + err.response.status,
-        //   "",
-        //   "frown"
-        // );
+        console.log("errr initial:", err.response);
       });
   };
 
-  handleSubmit = event => {
-    const { profileDetails, restaurantId } = this.state;
+  editDetailsRestaurant = () => {
+    const restaurantId = localStorage.getItem("restaurantId");
+    const {
+      profileDetails: {
+        name,
+        description,
+        country,
+        city,
+        address,
+        postalCode,
+        // logo,
+        images,
+        openAt,
+        closingAt
+      },
+      token
+    } = this.state;
+    // console.log(images);
+    axios
+      .put(
+        `http://localhost:9000/restaurants/${restaurantId}`,
+        {
+          name,
+          description,
+          country,
+          city,
+          address,
+          postalCode,
+          // logo,
+          images,
+          openAt,
+          closingAt
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      .then(res => {
+        console.log("responseEdit:", res.data);
+        this.getRestaurant();
+      })
+      .catch(err => {
+        console.log("errrredit:", err.response);
+        console.log("errrr:", err);
+      });
+  };
+
+  handleSubmitDetailsRestaurant = event => {
+    const { profileDetails, userId } = this.state;
     event.preventDefault();
-    if (profileDetails && restaurantId) {
+    if (profileDetails && userId) {
       this.editDetailsRestaurant();
     } else {
       this.initialDetailsRestaurant();
@@ -168,32 +159,30 @@ class Business extends React.Component {
   };
 
   getRestaurant = () => {
-    const userToken = localStorage.getItem("userToken");
-    const userId = localStorage.getItem("userId");
-    const restaurantId = localStorage.getItem("restaurantId");
-    this.setState({ userToken: userToken, restaurantId: restaurantId });
+    const token = localStorage.getItem("token");
+    this.setState({ token: token });
     axios
       .get(
-        `http://localhost:3000/restaurantByUserId/${userId}`,
+        `http://localhost:9000/restaurants/owned`,
 
         {
           headers: {
-            Authorization: `Bearer ${userToken}`
+            Authorization: `Bearer ${token}`
           }
         }
       )
       .then(res => {
-        localStorage.setItem("restaurantId", res.data._id);
+        const userId = localStorage.getItem("userId");
+        localStorage.setItem("restaurantId", res.data.id);
         const data = res.data;
-        this.setState({ profileDetails: data });
+        this.setState({
+          profileDetails: data,
+          userId: userId
+        });
+        console.log(data);
       })
       .catch(err => {
-        console.log("errrr:", err.response);
-        // openNotification(
-        //   err.response.data.message + " " + err.response.status,
-        //   "",
-        //   "frown"
-        // );
+        console.log("errrr:", err);
       });
   };
 
@@ -206,38 +195,59 @@ class Business extends React.Component {
     });
   };
 
-  setRestaurantType = value => {
-    this.setState({ type: value });
+  handleCancel = () => this.setState({ previewVisible: false });
+
+  handlePreview = file => {
+    this.setState({
+      previewImage: file.thumbUrl,
+      previewVisible: true
+    });
   };
 
-  addRestaurantType = () => {
-    const type = this.state;
-    let newListRestaurantTypes = this.state.restaurantTypes.slice();
-    newListRestaurantTypes.push(type);
+  handleUpload = ({ fileList }) => {
+    this.setState({ fileList });
+  };
 
+  onSaveImages = async () => {
+    const newImagesUrl = this.state.profileDetails.images.slice();
+    for (let i = 0; i < this.state.fileList.length; i++) {
+      const imageData = this.state.fileList[i];
+      console.log(
+        "this.state.fileList---------------->",
+        this.state.fileList[i]
+      );
+      const response = await storageRef
+        .child(
+          `images/${imageData.originFileObj.uid}.${
+            imageData.type.split("/")[1]
+          }`
+        )
+        .putString(
+          this.state.fileList[i].thumbUrl.split("base64,")[1],
+          "base64"
+        );
+      const imageUrl = await response.task.snapshot.ref.getDownloadURL();
+      newImagesUrl.push(imageUrl);
+    }
     this.setState({
-      restaurantTypes: newListRestaurantTypes,
-      type: ""
+      profileDetails: {
+        ...this.state.profileDetails,
+        images: newImagesUrl
+      }
     });
   };
 
   render() {
-    const uploadButtonLogo = (
-      <div>
-        <Icon type={this.state.loading ? "loading" : "plus"} />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
-    const { imageUrl } = this.state;
-    const { previewVisible, previewImage } = this.state;
-
-    const uploadButtonImage = (
+    const { previewVisible, previewImage, fileList } = this.state;
+    const uploadButton = (
       <div>
         <Icon type="plus" />
         <div className="ant-upload-text">Upload</div>
       </div>
     );
+
     const { profileDetails } = this.state;
+
     return (
       <div>
         <div style={{ padding: "20px", paddingTop: 0 }}>
@@ -272,46 +282,31 @@ class Business extends React.Component {
                         </div>
                       ))}
                     </div>
-                    <div
-                      style={{
-                        padding: "5px"
-                      }}
-                    >
-                      <TextArea
-                        value={this.state.type}
-                        rows={1}
-                        onChange={e => this.setRestaurantType(e.target.value)}
-                      />
-                      <Button onClick={this.addRestaurantType}>+ Add</Button>
-                    </div>
                   </div>
                   <p>Name Restaurant:</p>
                   <div>
                     <TextArea
                       rows={1}
-                      value={profileDetails.restaurantName}
+                      value={profileDetails.name}
                       onChange={e =>
-                        this.onAttributeChange("restaurantName", e.target.value)
+                        this.onAttributeChange("name", e.target.value)
                       }
                     />
                   </div>
                   <p>Description:</p>
                   <TextArea
                     rows={3}
-                    value={profileDetails.restaurantDescription}
+                    value={profileDetails.description}
                     onChange={e =>
-                      this.onAttributeChange(
-                        "restaurantDescription",
-                        e.target.value
-                      )
+                      this.onAttributeChange("description", e.target.value)
                     }
                   />
-                  <p>County:</p>
+                  <p>Country:</p>
                   <TextArea
-                    value={profileDetails.county}
+                    value={profileDetails.country}
                     rows={1}
                     onChange={e =>
-                      this.onAttributeChange("county", e.target.value)
+                      this.onAttributeChange("country", e.target.value)
                     }
                   />
                   <p>City:</p>
@@ -324,10 +319,10 @@ class Business extends React.Component {
                   />
                   <p>Street Address:</p>
                   <TextArea
-                    value={profileDetails.streetAddress}
+                    value={profileDetails.address}
                     rows={2}
                     onChange={e =>
-                      this.onAttributeChange("streetAddress", e.target.value)
+                      this.onAttributeChange("address", e.target.value)
                     }
                   />
                   <p>Postal code:</p>
@@ -338,42 +333,17 @@ class Business extends React.Component {
                       this.onAttributeChange("postalCode", e.target.value)
                     }
                   />
-                  <div style={{ marginTop: "20px" }}>
-                    <p>Logo:</p>
-                    <input type="file" onChange={this.fileSelectedHendler} />
-                    <button onClick={this.fileUploadHendler}>Upload</button>
-                    <div className="clearfix">
-                      <Upload
-                        name="avatar"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        onChange={this.handleChange}
-                      >
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt="avatar"
-                            style={{ width: "100%" }}
-                          />
-                        ) : (
-                          uploadButtonLogo
-                        )}
-                      </Upload>
-                    </div>
-                  </div>
-
-                  <div className="clearfix" style={{ marginTop: "20px" }}>
-                    <p>Images: </p>
+                  <div>
                     <Upload
-                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                       listType="picture-card"
+                      fileList={fileList}
                       onPreview={this.handlePreview}
-                      onChange={this.handleChangeImage}
+                      onChange={this.handleUpload}
+                      beforeUpload={() => false} // return false so that antd doesn't upload the picture right away
                     >
-                      {uploadButtonImage}
+                      {uploadButton}
                     </Upload>
+
                     <Modal
                       visible={previewVisible}
                       footer={null}
@@ -386,11 +356,17 @@ class Business extends React.Component {
                       />
                     </Modal>
                   </div>
-
                   <Button
                     className="save-details-button"
                     type="primary"
-                    onClick={this.handleSubmit}
+                    onClick={this.onSaveImages}
+                  >
+                    Save Images
+                  </Button>
+                  <Button
+                    className="save-details-button"
+                    type="primary"
+                    onClick={this.handleSubmitDetailsRestaurant}
                   >
                     Save
                   </Button>
