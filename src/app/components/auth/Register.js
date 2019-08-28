@@ -12,7 +12,7 @@ class Register extends React.Component {
     this.state = {
       email: "",
       password: "",
-      role: "admin",
+      role: "manager",
       confirmDirty: false,
       autoCompleteResult: []
     };
@@ -37,7 +37,7 @@ class Register extends React.Component {
     const { email, password, role } = this.state;
     console.log({ email, password, role });
     axios
-      .post(`http://localhost:3000/users/addUser`, { email, password, role })
+      .post(`http://localhost:9000/users`, { email, password, role })
       .then(res => {
         console.log(res);
         console.log(res.data);
