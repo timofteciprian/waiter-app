@@ -37,18 +37,32 @@ class Login extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
-
+    console.log(email, password);
+    var session_url = "http://localhost:9000/auth";
+    //var basicAuth = "Basic " + btoa(email + ":" + password);
     axios
-      .post(`http://localhost:3000/users/login`, { email, password })
+      .post(
+        session_url,
+        {},
+        {
+          auth: {
+            username: email,
+            password: password
+          }
+        }
+      )
       .then(res => {
         console.log(res.data);
-        localStorage.setItem("userToken", res.data.token);
+        localStorage.setItem("userId", res.data.user.id);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        localStorage.setItem("userId", res.data.user._id);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("restaurantId", res.data.user.restaurantId);
+
         console.log("ok");
         this.setState({ redirect: true });
       })
       .catch(err => {
+        console.log(err);
         console.log(err.data);
         // openNotification(
         //   err.response.data.message + " " + err.response.status,
@@ -59,6 +73,7 @@ class Login extends React.Component {
   };
 
   render() {
+    console.log(this.state.redirect);
     if (this.state.redirect) {
       return <Redirect to="/home" />;
     }
@@ -130,7 +145,6 @@ class Login extends React.Component {
                       type="primary"
                       className="login-form-button"
                       onClick={this.handleSubmit}
-                      href="/home"
                     >
                       Sign in
                     </Button>
