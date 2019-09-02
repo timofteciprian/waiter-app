@@ -1,0 +1,50 @@
+.containerCategories {
+  flex-wrap: wrap;
+  padding: "15px";
+  background-color: #ffffff;
+}
+
+.image {
+  height: 106px;
+  width: 157px;
+  border-radius: 4px;
+}
+
+.description {
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 13px;
+  letter-spacing: -0.08px;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 170px;
+  white-space: pre;
+}
+
+.items {
+  display: flex;
+}
+.titleMenuPreview {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+.carousel {
+  display: flex;
+  overflow-x: scroll;
+}
+.titleCategoryMenuPreview {
+  font-size: 22px;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.containerCards {
+  padding: 12px;
+  padding-right: 0;
+}
+.ant-card-body {
+  padding: 4px;
+}
+.ant-card-bordered {
+  border: 0;
+}

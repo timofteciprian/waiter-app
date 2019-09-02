@@ -1,17 +1,6 @@
 .totalItem {
   background-color: #ffffff;
-}
-
-.titleTotalItem {
-  color: #66666a;
-  font-family: "SF Pro Text";
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 0;
-  text-align: center;
-  line-height: 150px;
-
-  /* line-height: 148px; */
+  border: 1px solid #e6e4e4;
 }
 .totalItemNumber {
   background-color: #4672b8;
@@ -25,11 +14,7 @@
   margin-bottom: 0;
 }
 
-.active {
-  background-color: #ffffff;
-}
-
-.titleActive {
+.titleTotalItem {
   color: #66666a;
   font-family: "SF Pro Text";
   font-size: 30px;
@@ -41,6 +26,10 @@
   /* line-height: 148px; */
 }
 
+.active {
+  background-color: #ffffff;
+  border: 1px solid #e6e4e4;
+}
 .totalActiveNumber {
   background-color: #00bfb2;
   color: #ffffff;
@@ -52,12 +41,7 @@
   text-align: center;
   margin-bottom: 0;
 }
-
-.innactive {
-  background-color: #ffffff;
-}
-
-.titleInnactive {
+.titleActive {
   color: #66666a;
   font-family: "SF Pro Text";
   font-size: 30px;
@@ -65,8 +49,10 @@
   margin-bottom: 0;
   text-align: center;
   line-height: 150px;
-
-  /* line-height: 148px; */
+}
+.innactive {
+  background-color: #ffffff;
+  border: 1px solid #e6e4e4;
 }
 
 .totalInnactiveNumber {
@@ -79,4 +65,15 @@
   line-height: 150px;
   text-align: center;
   margin-bottom: 0;
+}
+.titleInnactive {
+  color: #66666a;
+  font-family: "SF Pro Text";
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+  line-height: 150px;
+
+  /* line-height: 148px; */
 }

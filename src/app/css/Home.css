@@ -7,14 +7,11 @@
 
 .active-views {
   color: #252525;
-  font-family: "SF Pro Text";
-  font-weight: bold;
   font-size: 14px;
   line-height: 17px;
 }
 .number-views {
   color: #ff6e50;
-  font-family: "SF Pro Display";
   font-size: 23px;
   font-weight: 600;
   letter-spacing: 0.28px;
@@ -22,7 +19,6 @@
 }
 .total-number-of-view {
   color: #66666a;
-  font-family: Roboto;
   font-size: 13px;
   line-height: 20px;
 }
@@ -33,14 +29,11 @@
 }
 .review-rating {
   color: #323332;
-  font-family: "SF Pro Text";
   font-size: 14px;
-  font-weight: bold;
   line-height: 16px;
 }
 .restaurant-review-av {
   color: #323332;
-  font-family: "SF Pro Text";
   font-size: 14px;
   line-height: 16px;
 }
@@ -52,4 +45,12 @@
 }
 .card {
   height: 175px;
+  padding: 20px;
+}
+.ant-rate {
+  color: #ff6143;
+  font-size: 30px;
+}
+.ant-progress-bg {
+  background-color: #ff6143;
 }

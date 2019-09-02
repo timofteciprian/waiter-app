@@ -1,0 +1,16 @@
+.responsive-image {
+  position: relative;
+  max-width: 100%;
+}
+
+.responsive-image__image {
+  /* position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;*/
+}
+
+.ant-carousel .slick-slide {
+  height: auto !important;
+}

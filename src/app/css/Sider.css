@@ -1,10 +1,30 @@
-.home {
-  height: 50px;
-  width: 240px;
-  background-color: #e6ebf1;
-}
 .menu {
   height: 1344px;
   background-color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(11, 4, 48, 0.15);
+}
+.home {
+  color: #66666a;
+}
+.account {
+  color: #66666a;
+}
+.ant-menu-item.ant-menu-item-active {
+  color: #ff6143;
+}
+/* 
+.ant-menu-item.ant-menu-item-active.home {
+  color: #ff6143;
+}
+.ant-menu-submenu.ant-menu-submenu-inlineant-menu-submenu-active {
+  color: #ff6143;
+} */
+
+.ant-layout-sider.ant-layout-sider-dark.ant-layout-sider-collapsed {
+  min-width: 0;
+  flex: 0;
+}
+
+.ant-layout-sider {
+  background: #ffffff;
 }

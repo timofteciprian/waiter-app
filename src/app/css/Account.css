@@ -1,0 +1,28 @@
+.save-email-password-button {
+  background-color: #ff6043;
+  border-color: #ff6043;
+}
+
+.save-details-button {
+  background-color: #ff6043;
+  border-color: #ff6043;
+  margin-top: "30px";
+}
+
+.listOpenHours {
+  display: flex;
+  flex-direction: column;
+  overflow-x: scroll;
+}
+.save-openHours-button {
+  background-color: #ff6043;
+  border-color: #ff6043;
+  color: #ffffff;
+  margin-top: 115px;
+}
+
+.button-restaurantType {
+  background-color: #ff6043;
+  border-color: #ff6043;
+  color: #ffffff;
+}

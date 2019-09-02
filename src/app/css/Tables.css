@@ -1,0 +1,23 @@
+.button-plus {
+  border-color: #ffffff;
+}
+.button-minus {
+  border-color: #ffffff;
+}
+
+/* .buttonTableView {
+  border-color: #ffffff;
+}
+.buttonTableDelete {
+  border-color: #ffffff;
+} */
+.containerTables {
+  padding-top: 20px;
+}
+
+.button-add-table {
+  background-color: #ff6043;
+  border-color: #ff6043;
+  color: #ffffff;
+  margin-left: 40px;
+}
