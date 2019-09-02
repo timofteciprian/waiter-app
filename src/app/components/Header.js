@@ -1,8 +1,8 @@
 import React from "react";
-import logo from "../../../static/Din-out-logo.png";
-import "../../css/Header.css";
+import logo from "../../static/Din-out-logo.png";
+import "../css/Header.css";
 import { Row, Col, Button, Icon } from "antd";
-import ResponsiveImage from "../utils/ResponsiveImage";
+import { ResponsiveImage } from "../utils/General";
 
 class HeaderContent extends React.Component {
   toggle = () => {
@@ -18,7 +18,7 @@ class HeaderContent extends React.Component {
   render() {
     const { isMenuCollapsed: collapsed } = this.props;
     return (
-      <div style={{ background: "white" }}>
+      <div style={{ background: "#ffffff" }}>
         <Row>
           <Col
             xs={{ span: 2, offset: 1 }}
