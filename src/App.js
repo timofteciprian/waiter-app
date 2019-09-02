@@ -12,7 +12,10 @@ import Tables from "./app/components/menuNavigation/management/Tables";
 import AppLayout from "./app/components/AppLayout";
 //import backgroundImg from "./static/Din-out-logo.png";
 
-const PrivateRoute = ({ component: Component, authed, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const token = localStorage.getItem("token");
+  const authed = !!token;
+
   return (
     <Route
       {...rest}
@@ -43,54 +46,21 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      authed: false
+      // authed: false
     };
   }
   render() {
-    const token = localStorage.getItem("userToken");
-    const authenticated = !!token;
-
     return (
       <div className="App">
         <Switch>
           {/* <Route exact path="/" component={Home} /> */}
-          <PublicRoute
-            authed={authenticated}
-            exact
-            path="/login"
-            component={LoginForm}
-          />
-          <PublicRoute
-            authed={authenticated}
-            path="/register"
-            component={RegisterForm}
-          />
-          <PrivateRoute
-            authed={authenticated}
-            exact
-            path="/home"
-            component={Home}
-          />
-          <PrivateRoute
-            authed={authenticated}
-            path="/account"
-            component={Account}
-          />
-          <PrivateRoute
-            authed={authenticated}
-            path="/management/menuSetup"
-            component={MenuSetup}
-          />
-          <PrivateRoute
-            authed={authenticated}
-            path="/management/itemList"
-            component={ItemList}
-          />
-          <PrivateRoute
-            authed={authenticated}
-            path="/management/tables"
-            component={Tables}
-          />
+          <PublicRoute exact path="/login" component={LoginForm} />
+          <PublicRoute path="/register" component={RegisterForm} />
+          <PrivateRoute exact path="/home" component={Home} />
+          <PrivateRoute path="/account" component={Account} />
+          <PrivateRoute path="/management/menuSetup" component={MenuSetup} />
+          <PrivateRoute path="/management/itemList" component={ItemList} />
+          <PrivateRoute path="/management/tables" component={Tables} />
         </Switch>
       </div>
     );
