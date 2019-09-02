@@ -1,12 +1,12 @@
 import React from "react";
 import { Form, Icon, Input, Button, Row, Col } from "antd";
-import axios from "axios";
 import { Redirect } from "react-router-dom";
 //import openNotification from "../utils/OpenNotification";
 import "../../css/Login.css";
 import logo from "../../../static/logo.svg";
 import imageLogin from "../../../static/imageLogin.png";
-import ResponsiveImage from "../utils/ResponsiveImage";
+import { ResponsiveImage } from "../../utils/General";
+import { login } from "../../api/LoginAndRegister";
 
 class Login extends React.Component {
   constructor(props) {
@@ -17,7 +17,6 @@ class Login extends React.Component {
       password: "",
       redirect: false
     };
-    //handleSubmit = this.handleSubmit.bind();
   }
 
   handleChangeEmail = event => {
@@ -34,42 +33,11 @@ class Login extends React.Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
     const { email, password } = this.state;
-    console.log(email, password);
-    var session_url = "http://localhost:9000/auth";
-    //var basicAuth = "Basic " + btoa(email + ":" + password);
-    axios
-      .post(
-        session_url,
-        {},
-        {
-          auth: {
-            username: email,
-            password: password
-          }
-        }
-      )
-      .then(res => {
-        console.log(res.data);
-        localStorage.setItem("userId", res.data.user.id);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("restaurantId", res.data.user.restaurantId);
-
-        console.log("ok");
-        this.setState({ redirect: true });
-      })
-      .catch(err => {
-        console.log(err);
-        console.log(err.data);
-        // openNotification(
-        //   err.response.data.message + " " + err.response.status,
-        //   "",
-        //   "frown"
-        // );
-      });
+    const loggedIn = await login(email, password);
+    if (loggedIn) this.setState({ redirect: true });
   };
 
   render() {
@@ -169,22 +137,3 @@ class Login extends React.Component {
 
 const LoginForm = Form.create({ name: "normal_login" })(Login);
 export default LoginForm;
-
-// const styles = {
-//   titleStyle: {
-//     display: "flex",
-//     marginLeft: "190px",
-//     marginTop: "50px"
-//   },
-//   divStyle: {
-//     marginLeft: "450px",
-//     width: "50%",
-//     height: "10%"
-//   },
-
-//   formStyle: {
-//     textAlign: "center",
-//     width: "65%",
-//     marginTop: "75px"
-//   }
-// };

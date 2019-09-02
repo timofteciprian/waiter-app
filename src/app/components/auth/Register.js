@@ -1,10 +1,11 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { Form, Input, Checkbox, Button, Row, Col, Icon } from "antd";
-import axios from "axios";
 import logo from "../../../static/logo.svg";
 import imageLogin from "../../../static/imageLogin.png";
 import "../../css/Register.css";
-import ResponsiveImage from "../utils/ResponsiveImage";
+import { ResponsiveImage } from "../../utils/General";
+import { register } from "../../api/LoginAndRegister";
 
 class Register extends React.Component {
   constructor(props) {
@@ -14,7 +15,8 @@ class Register extends React.Component {
       password: "",
       role: "manager",
       confirmDirty: false,
-      autoCompleteResult: []
+      autoCompleteResult: [],
+      redirect: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -32,19 +34,11 @@ class Register extends React.Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
     const { email, password, role } = this.state;
-    console.log({ email, password, role });
-    axios
-      .post(`http://localhost:9000/users`, { email, password, role })
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    const res = await register(email, password, role);
+    this.setState({ redirect: !!res });
   };
 
   handleConfirmBlur = e => {
@@ -75,6 +69,9 @@ class Register extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    if (this.state.redirect) {
+      return <Redirect to="/home" />;
+    }
 
     return (
       <div>
