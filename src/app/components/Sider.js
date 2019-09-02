@@ -11,7 +11,7 @@ class SiderContent extends React.Component {
         <Menu.Item key="10">
           <span>
             <Icon type="home" />
-            <a className="home" href="/home">
+            <a className="home" href="/">
               Home
             </a>
           </span>

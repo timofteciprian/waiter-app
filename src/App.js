@@ -53,10 +53,9 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Switch>
-          {/* <Route exact path="/" component={Home} /> */}
+          <PrivateRoute exact path="/" component={Home} />
           <PublicRoute exact path="/login" component={LoginForm} />
           <PublicRoute path="/register" component={RegisterForm} />
-          <PrivateRoute exact path="/home" component={Home} />
           <PrivateRoute path="/account" component={Account} />
           <PrivateRoute path="/management/menuSetup" component={MenuSetup} />
           <PrivateRoute path="/management/itemList" component={ItemList} />

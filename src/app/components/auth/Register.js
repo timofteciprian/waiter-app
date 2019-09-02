@@ -70,7 +70,7 @@ class Register extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     if (this.state.redirect) {
-      return <Redirect to="/home" />;
+      return <Redirect to="/" />;
     }
 
     return (

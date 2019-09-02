@@ -43,7 +43,7 @@ class Login extends React.Component {
   render() {
     console.log(this.state.redirect);
     if (this.state.redirect) {
-      return <Redirect to="/home" />;
+      return <Redirect to="/" />;
     }
     const { getFieldDecorator } = this.props.form;
     return (
