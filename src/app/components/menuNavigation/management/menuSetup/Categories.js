@@ -1,7 +1,6 @@
 import React from "react";
-import axios from "axios";
-import { Input } from "antd";
-import { Button } from "antd";
+import { Input, Button } from "antd";
+import { postCategory, getDataCategories } from "../../../../api/Management";
 import "../../../../css/MenuSetup.css";
 
 const { TextArea } = Input;
@@ -19,97 +18,70 @@ class Categories extends React.Component {
     this.getCategories();
   }
 
-  addCategory = () => {
-    const token = localStorage.getItem("token");
+  addCategory = async () => {
+    let newCategories = this.state.categories.slice();
     const name = this.state.category;
-    axios
-      .post(
-        `http://localhost:9000/food-categories`,
-        { name },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log("errrr:", err.response);
-      });
+    const res = await postCategory(name);
+    newCategories.push({ category: res.name, id: res.id });
+    this.setState({ categories: newCategories, category: "" });
   };
+
   setCategory = value => {
     this.setState({ category: value });
   };
-  getCategories = () => {
-    const token = localStorage.getItem("token");
-    const restaurantId = localStorage.getItem("restaurantId");
-    axios
-      .get(`http://localhost:9000/food-categories/restaurant/${restaurantId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        const categories = res.data;
-        const newCategories = this.state.categories.slice();
-        for (let i = 0; i < categories.length; i++) {
-          const category = categories[i].name;
-          newCategories.push(category);
-        }
-        this.setState({ categories: newCategories });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+
+  getCategories = async () => {
+    const newCategories = this.state.categories.slice();
+    const data = await getDataCategories(newCategories);
+    if (data !== undefined) {
+      this.setState({ categories: data });
+    }
   };
 
   render() {
     return (
-      <div>
-        <div>
-          <div style={{ paddingBottom: "20px" }}>
-            <div style={{ backgroundColor: "#ffffff" }}>
-              <div style={{ padding: "20px" }}>
-                <h1>Categories</h1>
-                <h5>Add categories for your food menu</h5>
+      <div style={{ paddingBottom: "20px" }}>
+        <div style={{ border: "1px solid #E6E4E4" }}>
+          <div style={{ padding: "20px" }}>
+            <h1>Categories</h1>
+            <h5>Add categories for your food menu</h5>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap"
+              }}
+            >
+              {this.state.categories.map((item, index) => (
                 <div
+                  key={index}
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap"
-                  }}
-                >
-                  {this.state.categories.map((item, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        paddingRight: "15px",
-                        paddingBottom: "15px"
-                      }}
-                    >
-                      <Button>{item}</Button>
-                    </div>
-                  ))}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
+                    paddingRight: "15px",
                     paddingBottom: "15px"
                   }}
                 >
-                  <div
-                    style={{
-                      paddingRight: "10px"
-                    }}
-                  >
-                    <TextArea
-                      value={this.state.category}
-                      rows={1}
-                      onChange={e => this.setCategory(e.target.value)}
-                    />
-                  </div>
-                  <Button onClick={this.addCategory}>+ Add</Button>
+                  <Button>{item.category}</Button>
                 </div>
+              ))}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                paddingBottom: "15px"
+              }}
+            >
+              <div
+                style={{
+                  paddingRight: "10px"
+                }}
+              >
+                <TextArea
+                  value={this.state.category}
+                  placeholder="Add category"
+                  rows={1}
+                  onChange={e => this.setCategory(e.target.value)}
+                />
               </div>
+              <Button onClick={this.addCategory}>+ Add</Button>
             </div>
           </div>
         </div>

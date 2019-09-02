@@ -1,9 +1,9 @@
 import React from "react";
-import axios from "axios";
 import { Tabs, Button, Icon } from "antd";
 import InfoItems from "./InfoItems";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "../../../css/ItemList.css";
+import { getFoodMenu, putStatusApi } from "../../../api/Management";
 
 const { TabPane } = Tabs;
 
@@ -20,75 +20,100 @@ class ItemList extends React.Component {
   }
 
   componentDidMount() {
-    this.getData();
+    this.getMenuItems();
   }
 
-  getData = () => {
-    const restaurantId = localStorage.getItem("restaurantId");
-    const token = localStorage.getItem("token");
-    axios
-      .get(`http://localhost:9000/menu/${restaurantId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        const list = res.data;
-        this.setState({ listCategories: list });
-      });
+  getMenuItems = async () => {
+    const res = await getFoodMenu();
+    console.log(res);
+    if (res !== undefined) {
+      this.setState({ listCategories: res });
+    }
   };
 
-  // onChangeStatus = (newStatus, id) => {
+  onChangeStatus = (newStatus, id) => {
+    const { listCategories } = this.state;
+    let newListCategories = listCategories.slice();
+    listCategories.forEach((el, indexEl) => {
+      // console.log(el);
+      el.dishes.forEach((item, index) => {
+        newListCategories[indexEl].dishes[index].status = newStatus;
+        console.log(newListCategories[indexEl].dishes[index].status);
+      });
+    });
+    this.setState({ listCategories: newListCategories });
+    putStatusApi(newStatus, id);
+  };
 
-  //   listCategories = this.listCategories.map(item => {
-  //     if(id === item._id){
+  statusDisplay = (status, id) => {
+    let backgroundColorActive = "";
+    let backgroundColorInnactive = "";
+    let colorActive = "";
+    let colorInnactive = "";
+    if (status === "active") {
+      backgroundColorActive = "#00bfb2";
+      backgroundColorInnactive = "#ffffff";
+      colorInnactive = "#080808";
+      colorActive = "#ffffff";
+    } else {
+      backgroundColorActive = "#ffffff";
+      colorActive = "#080808";
+      backgroundColorInnactive = "#FF5059";
+      colorInnactive = "#ffffff";
+    }
 
-  //     }
-  //   )}
-  // };
-
-  statusDisplay = (status, id) => (
-    <span>
+    return (
       <span>
-        <Button
-          // onClick={this.onChangeStatus(true, id)}
-          style={{
-            color: "#ffffff",
-            backgroundColor: status === true ? "#00bfb2" : "#FF5059"
-          }}
-        >
-          Active
-        </Button>
+        <span>
+          <Button
+            onClick={() => this.onChangeStatus("active", id)}
+            style={{
+              color: colorActive,
+              backgroundColor: backgroundColorActive
+            }}
+          >
+            Active
+          </Button>
+        </span>
+        <span>
+          <Button
+            onClick={() => this.onChangeStatus("innactive", id)}
+            style={{
+              color: colorInnactive,
+              backgroundColor: backgroundColorInnactive
+            }}
+          >
+            Inactive
+          </Button>
+        </span>
       </span>
-      <span>
-        <Button
-          onClick={this.onChangeStatus}
-          style={{
-            color: "#ffffff",
-            backgroundColor: status === false ? "#00bfb2" : "#FF5059"
-          }}
-        >
-          Inactive
-        </Button>
-      </span>
-    </span>
-  );
+    );
+  };
 
   displayDate = date => {
     return date.substring(0, 10);
   };
 
-  // listCompleted = data.map(item => (
-  //   <Column title={item.name} dataIndex={item.name} key={item.name} />
-  // ));
   render() {
     const { listCategories } = this.state;
-    console.log(listCategories);
     return (
-      <div>
+      <div
+        style={{
+          backgroundColor: "#ffffff",
+          borderTop: "1px solid #E6E4E4"
+        }}
+      >
         <InfoItems />
         <div style={{ padding: "20px", paddingTop: 0 }}>
-          <div style={{ backgroundColor: "#ffffff", padding: "20px" }}>
+          <div
+            style={{
+              backgroundColor: "#ffffff",
+              padding: "20px",
+              border: "1px solid #E6E4E4"
+            }}
+          >
             <Tabs defaultActiveKey="0" onChange={callback}>
-              {this.state.listCategories.map((el, index) => (
+              {listCategories.map((el, index) => (
                 <TabPane tab={el.foodCategory} key={index}>
                   <Table>
                     <Thead>
@@ -115,7 +140,7 @@ class ItemList extends React.Component {
                               <Icon type="edit" />
                             </Button>
                           </Td>
-                          <Td>{item.status}</Td>
+                          <Td>{this.statusDisplay(item.status, item.id)}</Td>
                         </Tr>
                       ))}
                     </Tbody>

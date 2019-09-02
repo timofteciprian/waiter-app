@@ -1,8 +1,8 @@
 import React from "react";
-import axios from "axios";
 import { Input, Select, Button, Upload, Icon } from "antd";
+import { postFoodItem, getDataCategories } from "../../../../api/Management";
+import { getUrlImageFromFirebase } from "../../../../api/Account";
 import "../../../../css/MenuSetup.css";
-import { storageRef } from "../../../../lib/firebase";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -14,6 +14,7 @@ const defaultItem = {
   price: 0,
   weight: 0,
   image: "",
+  categoryName: "",
   status: true
 };
 
@@ -27,76 +28,55 @@ class Item extends React.Component {
     categories: [],
     item: { ...defaultItem },
     file: {},
-    imageBase64: ""
+    imageBase64: "",
+    categoryName: ""
   };
 
-  onSaveItem = () => {
-    const {
-      item: { categoryId, title, description, price, weight, image }
-    } = this.state;
-    const token = localStorage.getItem("token");
-    const restaurantId = localStorage.getItem("restaurantId");
-    console.log(categoryId, title, description, price, weight, image);
-    axios
-      .post(
-        `http://localhost:9000/food-items`,
-        {
-          categoryId,
-          title,
-          description,
-          price,
-          image,
-          weight,
-          restaurantId
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      )
-      .then(res => {
-        console.log("ok:", res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  onSubmitFoodItem = async () => {
+    const file = this.state.file;
+    const imageBase64 = this.state.imageBase64;
+    const imageUrl = await getUrlImageFromFirebase(imageBase64, file);
+    const { item } = this.state;
+    item.image = imageUrl;
+    this.props.menuPreviewRef.onItemAdded(item);
+    postFoodItem(item);
+    this.setState({ item: defaultItem });
   };
 
   componentDidMount() {
     this.getCategories();
   }
 
-  getCategories = () => {
-    const restaurantId = localStorage.getItem("restaurantId");
-    const token = localStorage.getItem("token");
-    axios
-      .get(`http://localhost:9000/food-categories/restaurant/${restaurantId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        const categories = res.data;
-        const newCategories = this.state.categories.slice();
-        for (let i = 0; i < categories.length; i++) {
-          const category = categories[i].name;
-          const id = categories[i].id;
-          newCategories.push({ category, id });
-        }
-        this.setState({ categories: newCategories });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  getCategories = async () => {
+    const newCategories = this.state.categories.slice();
+    const data = await getDataCategories(newCategories);
+    if (data !== undefined) {
+      this.setState({ categories: data });
+    }
   };
 
   onAttributeChange = (propertyName, value) => {
-    console.log(value);
     this.setState({
       item: {
         ...this.state.item,
         [propertyName]: value
+      }
+    });
+  };
+  setCategory = indexItem => {
+    let categoryId = "";
+    let categoryName = "";
+    this.state.categories.forEach((item, index) => {
+      if (index === indexItem) {
+        categoryName = item.category;
+        categoryId = item.id;
+      }
+    });
+    this.setState({
+      item: {
+        ...this.state.item,
+        categoryId,
+        categoryName
       }
     });
   };
@@ -125,21 +105,6 @@ class Item extends React.Component {
     }
   };
 
-  onSaveImage = async () => {
-    const imageData = this.state.file;
-    const response = await storageRef
-      .child(`images/${imageData.uid}.${imageData.type.split("/")[1]}`)
-      .putString(this.state.imageBase64.split("base64,")[1], "base64");
-    const imageUrl = await response.task.snapshot.ref.getDownloadURL();
-    console.log("imageUrl----->", imageUrl);
-    this.setState({
-      item: {
-        ...this.state.item,
-        image: imageUrl
-      }
-    });
-  };
-
   render() {
     const { item } = this.state;
     const uploadButton = (
@@ -150,20 +115,22 @@ class Item extends React.Component {
     );
     return (
       <div>
-        <div style={{ backgroundColor: "#ffffff" }}>
+        <div
+          style={{ backgroundColor: "#ffffff", border: "1px solid #E6E4E4" }}
+        >
           <div style={{ padding: "20px" }}>
             <h1>Item</h1>
             <p>Category:</p>
             <Select
               showSearch
-              value={this.state.item.categoryId}
+              value={this.state.item.categoryName}
               style={{ width: 200 }}
               placeholder="Select category"
               optionFilterProp="children"
-              onChange={e => this.onAttributeChange("categoryId", e)}
+              onChange={e => this.setCategory(e)}
             >
               {this.state.categories.map((item, index) => (
-                <Option key={index} value={item.id}>
+                <Option key={index} value={index}>
                   {item.category}
                 </Option>
               ))}
@@ -219,10 +186,10 @@ class Item extends React.Component {
                 )}
               </Upload>
             </div>
-            <Button style={{ marginTop: "20px" }} onClick={this.onSaveImage}>
-              Save Image
-            </Button>
-            <Button style={{ marginTop: "20px" }} onClick={this.onSaveItem}>
+            <Button
+              style={{ marginTop: "20px" }}
+              onClick={this.onSubmitFoodItem}
+            >
               Save
             </Button>
           </div>

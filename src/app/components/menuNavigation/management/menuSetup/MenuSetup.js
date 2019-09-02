@@ -6,22 +6,34 @@ import Categories from "./Categories";
 import Item from "./Item";
 import MenuPreview from "./MenuPreview";
 
-//import imagePizza from "../../../../static/pizza.jpeg";
-
 class MenuSetup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuPreviewRef: null
+    };
+  }
+
   render() {
     return (
-      <div>
+      <div
+        style={{ backgroundColor: "#ffffff", borderTop: "1px solid #E6E4E4" }}
+      >
         <InfoItems />
         <div style={{ padding: "20px", paddingTop: "0" }}>
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={8} lg={8} xl={8}>
               <Categories />
-              <Item />
+              <Item menuPreviewRef={this.state.menuPreviewRef} />
             </Col>
 
-            <Col span={16}>
-              <MenuPreview />
+            <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+              <MenuPreview
+                ref={r =>
+                  !this.state.menuPreviewRef &&
+                  this.setState({ menuPreviewRef: r })
+                }
+              />
             </Col>
           </Row>
         </div>

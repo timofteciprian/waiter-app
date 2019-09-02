@@ -1,86 +1,44 @@
 import React from "react";
-import axios from "axios";
 import { Card } from "antd";
 import "../../../../css/MenuSetup.css";
+import { getFoodMenu } from "../../../../api/Management";
 
 const { Meta } = Card;
 
-const defaultItem = {
-  category: "",
-  title: "",
-  description: "",
-  price: 0,
-  grammage: 0,
-  status: ""
-};
-
 class MenuPreview extends React.Component {
-  state = {
-    loading: false,
-    confirmDirty: false,
-    autoCompleteResult: [],
-    previewVisible: false,
-    previewImage: "",
-    categoryAdd: "",
-    categories: ["Pizza", "Pasta", "Chicken"],
-    category: "",
-    item: { ...defaultItem },
-    list_Categories: [],
-    listCategories: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      listCategories: []
+    };
+  }
 
   componentDidMount() {
     this.getData();
   }
 
-  getData = () => {
-    const restaurantId = localStorage.getItem("restaurantId");
-    const token = localStorage.getItem("token");
-    axios
-      .get(`http://localhost:9000/menu/${restaurantId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        const list = res.data;
-        // this.setCategories(list);
-        this.setState({ listCategories: list });
-      });
+  onItemAdded(item) {
+    let newListCategories = this.state.listCategories.slice();
+    this.state.listCategories.forEach((el, index) => {
+      if (el.foodCategory === item.categoryName) {
+        newListCategories[index].dishes.push(item);
+      }
+    });
+    this.setState({ listCategories: newListCategories });
+  }
+
+  getData = async () => {
+    const data = await getFoodMenu();
+    if (data !== undefined) {
+      this.setState({ listCategories: data });
+    }
   };
-
-  // setCategories = list => {
-  //   let newListCategories = this.state.listCategories.slice();
-
-  //   list.map(item => {
-  //     let category = item.category;
-  //     const element = item;
-  //     const foundCategory = newListCategories.find(
-  //       el => el.category === category
-  //     );
-  //     if (foundCategory === undefined) {
-  //       newListCategories.push({
-  //         category,
-  //         details: []
-  //       });
-  //       this.setState({
-  //         listCategories: newListCategories
-  //       });
-  //     }
-  //     newListCategories = newListCategories.map(listItem => {
-  //       if (listItem.category === category) {
-  //         listItem.details.push(element);
-  //       }
-  //       return listItem;
-  //     });
-  //   });
-  //   this.setState({
-  //     listCategories: newListCategories
-  //   });
-  // };
-
   render() {
     return (
       <div>
-        <div style={{ backgroundColor: "#ffffff" }}>
+        <div
+          style={{ backgroundColor: "#ffffff", border: "1px solid #E6E4E4" }}
+        >
           <p className="titleMenuPreview">Menu preview</p>
           {this.state.listCategories.map((el, categoryIndex) => (
             <div

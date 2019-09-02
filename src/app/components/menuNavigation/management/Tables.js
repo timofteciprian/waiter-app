@@ -1,7 +1,12 @@
 import React from "react";
 import { Row, Col, Button, Icon, Input, Card, InputNumber, Select } from "antd";
 import "../../../css/Tables.css";
-
+import {
+  createTableApi,
+  getTableApi,
+  putTableApi,
+  deleteTableApi
+} from "../../../api/Management";
 const { TextArea } = Input;
 const { Option } = Select;
 const ButtonGroup = Button.Group;
@@ -11,68 +16,111 @@ class Tables extends React.Component {
     super(props);
     this.state = {
       numberTables: 2,
-      value: 0,
+      name: "",
       isTableShown: false,
       index: 0,
-      tables: [
-        {
-          name: "Table 1",
-          nrSeats: 2,
-          location: "inside"
-        },
-        {
-          name: "Table 2",
-          nrSeats: 4,
-          location: "outside"
-        }
-      ]
+      tables: [],
+      table: {},
+      delete: false
     };
   }
+  componentDidMount() {
+    this.getTables();
+  }
 
-  // setValue = value => {
-  //   this.setState({ numberTables: value });
-  // };
-
-  setNumberTables = value => {
-    this.setState({
-      value
-    });
-  };
-
-  addTables = () => {
-    const numberTables = this.state.numberTables;
-    const valueNumber = Number(this.state.value);
-    const number = valueNumber + numberTables;
-    this.setState({ numberTables: number });
-    let newTables = this.state.tables.slice();
-    for (let i = numberTables; i < number; i++) {
-      newTables.push({
-        name: `Table ${i + 1}`,
-        seats: 0,
-        location: ""
-      });
-      this.setState({ tables: newTables });
+  getTables = async () => {
+    const res = await getTableApi();
+    if (res !== undefined) {
+      console.log(res);
+      this.setState({ tables: res });
     }
   };
 
-  // onChangeLocation = value => {
-  //   console.log(value);
-  //   const { index } = this.state;
-  //   const table = this.state.tables[index];
-  //   const { tables } = this.state;
-  //   tables.map((item, indexTable) =>{
-  //     if(index === indexTable){
-  //       table.location =
-  //     }
-  //   })
-  //   // this.setState({
-  //   //   table[this.state.index]:value
-  //   // })
-  // };
+  setNameTables = value => {
+    this.setState({
+      name: value
+    });
+  };
+
+  addTables = async () => {
+    const name = this.state.name;
+    const nrSeats = 0;
+    const location = "";
+    const res = await createTableApi(name, nrSeats, location);
+    let newTables = this.state.tables.slice();
+    newTables.push({
+      name,
+      nrSeats,
+      location,
+      id: res.id
+    });
+    this.setState({ tables: newTables });
+  };
+
+  onChangeLocation = value => {
+    const { index } = this.state;
+    const newTables = this.state.tables.slice();
+    const { tables } = this.state;
+    tables.forEach((item, indexTable) => {
+      if (index === indexTable) {
+        newTables[index].location = value;
+        this.setState({
+          table: {
+            ...this.state.table,
+            location: value,
+            name: item.name,
+            id: item.id
+          }
+        });
+      }
+    });
+    this.setState({
+      tables: newTables
+    });
+  };
+  onChangeNrSeats = value => {
+    const { index } = this.state;
+    const newTables = this.state.tables.slice();
+    const { tables } = this.state;
+    tables.forEach((item, indexTable) => {
+      if (index === indexTable) {
+        newTables[index].nrSeats = value;
+        console.log("table seats", item);
+        this.setState({
+          table: {
+            ...this.state.table,
+            nrSeats: value,
+            name: item.name,
+            id: item.id
+          }
+        });
+      }
+    });
+    this.setState({
+      tables: newTables
+    });
+  };
+
+  handleSubmitTable = () => {
+    const { table } = this.state;
+    console.log(table);
+    putTableApi(table.id, table.name, table.location, table.nrSeats);
+  };
+
+  deleteTable = item => {
+    const { tables } = this.state;
+    const newTables = tables.slice();
+    tables.forEach((table, index) => {
+      if (table === item) newTables.splice(index, 1);
+    });
+    this.setState({ tables: newTables });
+    deleteTableApi(item.id);
+  };
 
   viewDetailsTable = () => {
     const { index } = this.state;
     const table = this.state.tables[index];
+    console.log("---->>", table);
     return (
       <div>
         <Card
@@ -85,18 +133,18 @@ class Tables extends React.Component {
               <span>
                 <p>Add seats</p>
                 <InputNumber
-                  min={1}
-                  max={10}
-                  value={table.nrSeats}
+                  min={0}
+                  max={30}
+                  value={this.state.table.nrSeats}
                   defaultValue={2}
-                  // onChange={onChangeSeats}
+                  onChange={this.onChangeNrSeats}
                 />
               </span>
             </span>
             <p>Location</p>
             <Select
               showSearch
-              value={table.location}
+              value={this.state.table.location}
               style={{ width: 200 }}
               placeholder="Select location"
               onChange={this.onChangeLocation}
@@ -104,6 +152,14 @@ class Tables extends React.Component {
               <Option value="inside">Inside</Option>
               <Option value="outside">Outside</Option>
             </Select>
+            <Button
+              style={{ marginTop: "20px" }}
+              className="save-details-button"
+              type="primary"
+              onClick={this.handleSubmitTable}
+            >
+              Save
+            </Button>
           </div>
         </Card>
       </div>
@@ -120,25 +176,18 @@ class Tables extends React.Component {
                 <h1>Add tables</h1>
                 <span>
                   <span>
-                    <Button className="button-minus">
-                      <Icon type="minus-circle" />
-                    </Button>
-                  </span>
-                  <span>
                     <TextArea
-                      //value={this.state.numberTables}
+                      placeholder="Add name table"
                       rows={1}
                       style={{ width: "100px" }}
-                      onChange={e => this.setNumberTables(e.target.value)}
+                      onChange={e => this.setNameTables(e.target.value)}
                     />
                   </span>
                   <span>
-                    <Button className="button-plus">
-                      <Icon type="plus-circle" />
-                    </Button>
-                  </span>
-                  <span>
-                    <Button className="button-add" onClick={this.addTables}>
+                    <Button
+                      className="button-add-table"
+                      onClick={this.addTables}
+                    >
                       Add
                     </Button>
                   </span>
@@ -149,7 +198,11 @@ class Tables extends React.Component {
                     <div key={index}>
                       <div className="containerTables">
                         <ButtonGroup size="large">
-                          <Button className="buttonTableDelete" size="large">
+                          <Button
+                            className="buttonTableDelete"
+                            size="large"
+                            onClick={() => this.deleteTable(item)}
+                          >
                             x
                           </Button>
                           <Button
@@ -158,7 +211,8 @@ class Tables extends React.Component {
                             onClick={() =>
                               this.setState({
                                 isTableShown: !this.state.isTableShown,
-                                index: index
+                                index: index,
+                                table: item
                               })
                             }
                           >
