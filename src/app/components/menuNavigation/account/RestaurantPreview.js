@@ -1,8 +1,7 @@
 import React from "react";
-import axios from "axios";
-import { Form, Avatar, Carousel } from "antd";
-import ResponsiveImage from "../../utils/ResponsiveImage";
+import { Form, Carousel, Avatar } from "antd";
 import "../../../css/account/RestaurantPreview.css";
+import { getDetailsRestaurantApi } from "../../../api/Account";
 
 //import openNotification from "../utils/OpenNotification";
 
@@ -12,46 +11,61 @@ class RestaurantPreview extends React.Component {
     confirmDirty: false,
     autoCompleteResult: [],
     item: {},
-    imagesUrl: []
+    imagesUrl: [],
+    logo: ""
   };
 
   componentDidMount() {
     this.getData();
+    document.addEventListener("onRestaurantDetailsChange", ({ detail }) => {
+      this.setState({
+        item: detail,
+        imagesUrl: detail.images,
+        logo: detail.logo
+      });
+    });
   }
 
-  getData = async () => {
-    const token = localStorage.getItem("token");
-    const restaurantId = localStorage.getItem("restaurantId");
-    axios
-      .get(`http://localhost:9000/restaurants/${restaurantId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        const data = res.data;
-        this.setState({ item: data, imagesUrl: data.images });
+  onRestaurantDetailsChange = item => {
+    console.log("item", item);
+  };
 
-        console.log("data----->", data);
-      });
+  getData = async () => {
+    const res = await getDetailsRestaurantApi();
+    this.setState({ item: res, imagesUrl: res.images, logo: res.logo });
   };
 
   render() {
     const { item } = this.state;
     return (
-      <div style={{ padding: "20px", paddingLeft: 0, paddingTop: 0 }}>
+      <div style={{ padding: "20px", paddingTop: 0 }}>
         <div
           style={{
             background: "#ffffff",
-            padding: "20px"
+            padding: "20px",
+            border: "1px solid #E6E4E4"
           }}
         >
           <h1>Restaurant Preview</h1>
-          <Carousel className="carousel" autoplay>
+          <Carousel
+            className="carousel"
+            dotPosition="top"
+            // autoplay
+            style={{ height: "auto" }}
+          >
             {this.state.imagesUrl.map((image, index) => (
-              <div key={index}>
-                <ResponsiveImage src={image} width={1200} height={800} />
-              </div>
+              <img
+                key={index}
+                className="responsive-image__image"
+                alt="imageLogin"
+                src={image}
+              />
             ))}
           </Carousel>
+          <Avatar shape="square" size={64} icon="user" src={item.logo} />
+          {/* <div style={{ zIndex: "1000" }}> */}
+
+          {/* </div> */}
           <h2 style={{ marginTop: "40px" }}>{item.name}</h2>
           <p>{item.category}</p>
           <p>{item.description}</p>

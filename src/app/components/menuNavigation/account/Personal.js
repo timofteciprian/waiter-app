@@ -1,17 +1,37 @@
 import React from "react";
-// import axios from "axios";
 import { Form, Input, Icon, Button } from "antd";
 import "../../../css/Account.css";
+import { putEmailAndPasswordApi, getEmailApi } from "../../../api/Account";
 //import openNotification from "../utils/OpenNotification";
 
 class Personal_ extends React.Component {
-  state = {
-    loading: false,
-    confirmDirty: false,
-    autoCompleteResult: [],
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      confirmDirty: false,
+      autoCompleteResult: [],
+      email: "",
+      password: ""
+    };
+  }
 
-    email: "",
-    password: ""
+  handleSave = async () => {
+    const { email, password } = this.state;
+    console.log(email, password);
+    const res = await putEmailAndPasswordApi(email, password);
+    console.log(res);
+  };
+
+  componentDidMount() {
+    this.getEmail();
+  }
+
+  getEmail = async () => {
+    const res = await getEmailApi();
+    if (res !== undefined) {
+      this.setState({ email: res.email });
+    }
   };
 
   handleChangeEmail = event => {
@@ -30,10 +50,15 @@ class Personal_ extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-
     return (
-      <div style={{ padding: "20px", height: "335px" }}>
-        <div style={{ background: "#ffffff", padding: "20px" }}>
+      <div style={{ padding: "20px" }}>
+        <div
+          style={{
+            background: "#ffffff",
+            padding: "20px",
+            border: "1px solid #E6E4E4"
+          }}
+        >
           <Form className="login-form">
             <h1>Personal</h1>
             <h4>Account settings</h4>
@@ -44,7 +69,8 @@ class Personal_ extends React.Component {
                     required: true,
                     message: "Please input your username!"
                   }
-                ]
+                ],
+                initialValue: this.state.email
               })(
                 <Input
                   prefix={
@@ -80,7 +106,6 @@ class Personal_ extends React.Component {
                 type="primary"
                 className="save-email-password-button"
                 onClick={this.handleSave}
-                href="/home"
               >
                 Save
               </Button>
