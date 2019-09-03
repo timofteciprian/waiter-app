@@ -11,9 +11,17 @@
   color: #ff6043;
 }
 
-.description {
+.description-dinOut {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
   line-height: 14px;
+}
+
+.description-forgotPass {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 14px;
+  margin-top: 15px;
 }

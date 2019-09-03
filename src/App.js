@@ -10,6 +10,7 @@ import ItemList from "./app/components/menuNavigation/management/ItemList";
 import Home from "./app/components/menuNavigation/home/Home";
 import Tables from "./app/components/menuNavigation/management/Tables";
 import AppLayout from "./app/components/AppLayout";
+import ForgotPassword from "./app/components/auth/ForgotPassword";
 //import backgroundImg from "./static/Din-out-logo.png";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -43,17 +44,12 @@ function PublicRoute({ component: Component, ...rest }) {
 }
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // authed: false
-    };
-  }
   render() {
     return (
       <div className="App">
         <Switch>
           <PrivateRoute exact path="/" component={Home} />
+          <PublicRoute path="/forgotPassword" component={ForgotPassword} />
           <PublicRoute exact path="/login" component={LoginForm} />
           <PublicRoute path="/register" component={RegisterForm} />
           <PrivateRoute path="/account" component={Account} />

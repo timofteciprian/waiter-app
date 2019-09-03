@@ -120,7 +120,7 @@ class Login extends React.Component {
                       <a className="create-account" href="/register">
                         Create account
                       </a>
-                      <a className="login-form-forgot" href="/">
+                      <a className="login-form-forgot" href="/forgotPassword">
                         Forgot password
                       </a>
                     </div>
