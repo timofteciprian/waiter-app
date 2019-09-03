@@ -44,6 +44,9 @@ class Business extends React.Component {
 
   submitCreateRestaurant = async () => {
     const { profileDetails } = this.state;
+    document.dispatchEvent(
+      new CustomEvent("onRestaurantDetailsChange", { detail: profileDetails })
+    );
     const res = await postDetailsRestaurant(profileDetails);
     if (res) this.getRestaurantDetails();
   };
