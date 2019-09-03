@@ -45,6 +45,11 @@ class Item extends React.Component {
 
   componentDidMount() {
     this.getCategories();
+    document.addEventListener("onCategoriesChange", ({ detail }) => {
+      this.setState({
+        categories: detail
+      });
+    });
   }
 
   getCategories = async () => {

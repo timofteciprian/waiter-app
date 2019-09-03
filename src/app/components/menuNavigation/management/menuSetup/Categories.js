@@ -23,6 +23,9 @@ class Categories extends React.Component {
     const name = this.state.category;
     const res = await postCategory(name);
     newCategories.push({ category: res.name, id: res.id });
+    document.dispatchEvent(
+      new CustomEvent("onCategoriesChange", { detail: newCategories })
+    );
     this.setState({ categories: newCategories, category: "" });
   };
 
