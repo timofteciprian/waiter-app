@@ -33,6 +33,7 @@ class Categories extends React.Component {
   getCategories = async () => {
     const newCategories = this.state.categories.slice();
     const data = await getDataCategories(newCategories);
+    console.log(data);
     if (data !== undefined) {
       this.setState({ categories: data });
     }

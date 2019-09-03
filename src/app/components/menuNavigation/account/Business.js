@@ -29,7 +29,7 @@ class Business extends React.Component {
       "romanian",
       "traditional"
     ],
-    profileDetails: {},
+    profileDetails: { images: [] },
     userId: "",
     imageBase64: "",
     file: {},
@@ -151,18 +151,6 @@ class Business extends React.Component {
     });
   };
 
-  loadingSpin = () => {
-    if (this.state.loadingSpin) {
-      return (
-        <div>
-          <Spin size="small" />
-          <Spin />
-          <Spin size="large" />
-        </div>
-      );
-    }
-  };
-
   render() {
     const {
       profileDetails,
@@ -250,7 +238,7 @@ class Business extends React.Component {
                       this.onAttributeChange("description", e.target.value)
                     }
                   />
-                  {this.loadingSpin()}
+
                   <p>Country:</p>
                   <TextArea
                     value={profileDetails.country}

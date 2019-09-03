@@ -40,6 +40,7 @@ export const getDataCategories = newCategories => {
     })
     .then(res => {
       const categories = res.data;
+      console.log(categories);
       for (let i = 0; i < categories.length; i++) {
         const category = categories[i].name;
         const id = categories[i].id;
