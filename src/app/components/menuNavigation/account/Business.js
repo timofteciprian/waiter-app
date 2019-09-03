@@ -170,8 +170,6 @@ class Business extends React.Component {
       previewImage,
       fileList
     } = this.state;
-    console.log(profileDetails);
-    console.log(profileDetails.restaurantType);
     const uploadButtonImages = (
       <div>
         <Icon type="plus" />

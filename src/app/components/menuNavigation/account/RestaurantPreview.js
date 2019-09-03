@@ -26,10 +26,6 @@ class RestaurantPreview extends React.Component {
     });
   }
 
-  onRestaurantDetailsChange = item => {
-    console.log("item", item);
-  };
-
   getData = async () => {
     const res = await getDetailsRestaurantApi();
     this.setState({ item: res, imagesUrl: res.images, logo: res.logo });
@@ -37,6 +33,7 @@ class RestaurantPreview extends React.Component {
 
   render() {
     const { item } = this.state;
+    console.log("item", item);
     return (
       <div style={{ padding: "20px", paddingTop: 0 }}>
         <div
@@ -50,22 +47,14 @@ class RestaurantPreview extends React.Component {
           <Carousel
             className="carousel"
             dotPosition="top"
-            // autoplay
+            autoplay
             style={{ height: "auto" }}
           >
             {this.state.imagesUrl.map((image, index) => (
-              <img
-                key={index}
-                className="responsive-image__image"
-                alt="imageLogin"
-                src={image}
-              />
+              <img key={index} alt="imageLogin" src={image} />
             ))}
           </Carousel>
           <Avatar shape="square" size={64} icon="user" src={item.logo} />
-          {/* <div style={{ zIndex: "1000" }}> */}
-
-          {/* </div> */}
           <h2 style={{ marginTop: "40px" }}>{item.name}</h2>
           <p>{item.category}</p>
           <p>{item.description}</p>
