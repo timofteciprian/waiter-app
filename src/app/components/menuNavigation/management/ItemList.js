@@ -25,7 +25,6 @@ class ItemList extends React.Component {
 
   getMenuItems = async () => {
     const res = await getFoodMenu();
-    console.log(res);
     if (res !== undefined) {
       this.setState({ listCategories: res });
     }
@@ -35,10 +34,9 @@ class ItemList extends React.Component {
     const { listCategories } = this.state;
     let newListCategories = listCategories.slice();
     listCategories.forEach((el, indexEl) => {
-      // console.log(el);
       el.dishes.forEach((item, index) => {
-        newListCategories[indexEl].dishes[index].status = newStatus;
-        console.log(newListCategories[indexEl].dishes[index].status);
+        if (item.id === id)
+          newListCategories[indexEl].dishes[index].status = newStatus;
       });
     });
     this.setState({ listCategories: newListCategories });
@@ -150,49 +148,6 @@ class ItemList extends React.Component {
             </Tabs>
           </div>
         </div>
-        {/* 
-        <div style={{ padding: "20px" }}>
-          <Row>
-            <Col
-              xs={{ span: 24, order: 1 }}
-              sm={{ span: 24, order: 1 }}
-              md={{ span: 24, order: 1 }}
-              lg={{ span: 24, order: 1 }}
-              xl={{ span: 24, order: 1 }}
-            >
-              <div>
-                <div style={{ background: "#ffffff" }}>
-                  <Tabs defaultActiveKey="1" onChange={callback}>
-                    <TabPane tab="All items" key="1">
-                      <div style={{ paddingTop: "20px" }}>
-                        <div style={{ backgroundColor: "#ffffff" }}>
-                          <Table columns={columns} dataSource={data} />
-                        </div>
-                      </div>
-                    </TabPane>
-                    <TabPane tab="Pasta" key="2">
-                      <div style={{ paddingTop: "20px" }}>
-                        <div style={{ backgroundColor: "#ffffff" }}>
-                          <Table columns={columns} dataSource={data} />
-                        </div>
-                      </div>
-                    </TabPane>
-                    <TabPane tab="Pizza" key="3">
-                      ...
-                    </TabPane>
-                    <TabPane tab="Sushi" key="4">
-                      <div style={{ paddingTop: "20px" }}>
-                        <div style={{ backgroundColor: "#ffffff" }}>
-                          <Table columns={columns} dataSource={data} />
-                        </div>
-                      </div>
-                    </TabPane>
-                  </Tabs>
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </div> */}
       </div>
     );
   }
