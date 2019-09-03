@@ -22,7 +22,6 @@ export const login = async (email, password) => {
       }
     )
     .then(res => {
-      openNotification(message, descriptionOk, iconOk);
       localStorage.setItem("userId", res.data.user.id);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
@@ -43,7 +42,6 @@ export const register = async (email, password, role) => {
       password,
       role
     });
-    if (res) openNotification(message, descriptionOk, iconOk);
     localStorage.setItem("userId", res.data.id);
     localStorage.setItem("user", JSON.stringify(res.data.user));
     const loggedIn = await login(email, password);
@@ -51,5 +49,21 @@ export const register = async (email, password, role) => {
   } catch (e) {
     openNotification(message, descriptionError, iconError);
     console.log("Error @ register:", e);
+  }
+};
+export const forgotPasswordApi = async email => {
+  try {
+    const res = await axios.post(
+      `${config.baseUrl}/users/updateForgotPassword`,
+      {
+        email
+      }
+    );
+    if (res) openNotification(message, descriptionOk, iconOk);
+    return true;
+  } catch (e) {
+    openNotification(message, descriptionError, iconError);
+    console.log("Error @ register:", e);
+    return false;
   }
 };
