@@ -3,7 +3,7 @@ import { storageRef } from "../lib/firebase";
 import config from "../utils/config";
 import { openNotification } from "../utils/General";
 
-const message = "Send -> ";
+const message = "Sent ";
 const descriptionOk = "Status: OK";
 const iconOk = "smile";
 const descriptionError = "Status: Error";
