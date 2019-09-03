@@ -3,6 +3,7 @@ import { Layout } from "antd";
 import SiderContent from "./Sider";
 import HeaderContent from "./Header";
 import "../css/Sider.css";
+import logo from "../../static/logoBackground.svg";
 
 const { Header, Sider, Content } = Layout;
 
@@ -26,7 +27,15 @@ const AppLayout = ({ children }) => {
         >
           <SiderContent />
         </Sider>
-        <Content>{children}</Content>
+        <Content
+          style={{
+            backgroundColor: "#ffffff",
+            borderTop: "1px solid #E6E4E4",
+            background: `url(${logo}) center no-repeat `
+          }}
+        >
+          {children}
+        </Content>
       </Layout>
     </Layout>
   );

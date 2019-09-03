@@ -42,7 +42,7 @@ class Categories extends React.Component {
     return (
       <div style={{ paddingBottom: "20px" }}>
         <div style={{ border: "1px solid #E6E4E4" }}>
-          <div style={{ padding: "20px" }}>
+          <div style={{ padding: "20px", backgroundColor: "#ffffff" }}>
             <h1>Categories</h1>
             <h5>Add categories for your food menu</h5>
             <div

@@ -16,9 +16,7 @@ class MenuSetup extends React.Component {
 
   render() {
     return (
-      <div
-        style={{ backgroundColor: "#ffffff", borderTop: "1px solid #E6E4E4" }}
-      >
+      <div style={{ borderTop: "1px solid #E6E4E4" }}>
         <InfoItems />
         <div style={{ padding: "20px", paddingTop: "0" }}>
           <Row gutter={16}>

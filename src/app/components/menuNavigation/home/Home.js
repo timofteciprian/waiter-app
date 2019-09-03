@@ -29,9 +29,7 @@ class Home extends React.Component {
       <div
         style={{
           padding: "20px",
-          background: "#ffffff",
-          backgroundImage: `url(${logo})`,
-          border: "1px solid #E6E4E4"
+          background: "transparent"
         }}
       >
         <Row gutter={16} type="flex">

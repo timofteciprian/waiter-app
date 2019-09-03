@@ -97,7 +97,6 @@ class ItemList extends React.Component {
     return (
       <div
         style={{
-          backgroundColor: "#ffffff",
           borderTop: "1px solid #E6E4E4"
         }}
       >

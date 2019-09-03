@@ -169,68 +169,74 @@ class Tables extends React.Component {
   render() {
     return (
       <div>
-        <div style={{ padding: "20px" }}>
-          <Row>
-            <Col span={14}>
-              <div style={{ padding: "20px", backgroundColor: "#ffffff" }}>
-                <h1>Add tables</h1>
-                <span>
+        <div
+          style={{
+            borderTop: "1px solid #E6E4E4"
+          }}
+        >
+          <div style={{ padding: "20px" }}>
+            <Row>
+              <Col span={14}>
+                <div style={{ padding: "20px", backgroundColor: "#ffffff" }}>
+                  <h1>Add tables</h1>
                   <span>
-                    <TextArea
-                      placeholder="Add name table"
-                      rows={1}
-                      style={{ width: "100px" }}
-                      onChange={e => this.setNameTables(e.target.value)}
-                    />
+                    <span>
+                      <TextArea
+                        placeholder="Add name table"
+                        rows={1}
+                        style={{ width: "100px" }}
+                        onChange={e => this.setNameTables(e.target.value)}
+                      />
+                    </span>
+                    <span>
+                      <Button
+                        className="button-add-table"
+                        onClick={this.addTables}
+                      >
+                        Add
+                      </Button>
+                    </span>
                   </span>
-                  <span>
-                    <Button
-                      className="button-add-table"
-                      onClick={this.addTables}
-                    >
-                      Add
-                    </Button>
-                  </span>
-                </span>
-                <p style={{ paddingTop: "20px" }}>Table customization</p>
-                <div>
-                  {this.state.tables.map((item, index) => (
-                    <div key={index}>
-                      <div className="containerTables">
-                        <ButtonGroup size="large">
-                          <Button
-                            className="buttonTableDelete"
-                            size="large"
-                            onClick={() => this.deleteTable(item)}
-                          >
-                            x
-                          </Button>
-                          <Button
-                            className="buttonTableView"
-                            size="large"
-                            onClick={() =>
-                              this.setState({
-                                isTableShown: !this.state.isTableShown,
-                                index: index,
-                                table: item
-                              })
-                            }
-                          >
-                            {item.name}
-                            <Icon type="right" />
-                          </Button>
-                        </ButtonGroup>
+                  <p style={{ paddingTop: "20px" }}>Table customization</p>
+                  <div>
+                    {this.state.tables.map((item, index) => (
+                      <div key={index}>
+                        <div className="containerTables">
+                          <ButtonGroup size="large">
+                            <Button
+                              className="buttonTableDelete"
+                              size="large"
+                              onClick={() => this.deleteTable(item)}
+                            >
+                              x
+                            </Button>
+                            <Button
+                              className="buttonTableView"
+                              size="large"
+                              onClick={() =>
+                                this.setState({
+                                  isTableShown: !this.state.isTableShown,
+                                  index: index,
+                                  table: item
+                                })
+                              }
+                            >
+                              {item.name}
+                              <Icon type="right" />
+                            </Button>
+                          </ButtonGroup>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </Col>
+              </Col>
 
-            <Col span={10}>
-              {this.state.isTableShown ? this.viewDetailsTable() : null}
-            </Col>
-          </Row>
+              <Col span={10}>
+                {this.state.isTableShown ? this.viewDetailsTable() : null}
+              </Col>
+            </Row>
+          </div>
         </div>
       </div>
     );
