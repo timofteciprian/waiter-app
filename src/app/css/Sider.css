@@ -9,22 +9,10 @@
 .account {
   color: #66666a;
 }
-.ant-menu-item.ant-menu-item-active {
-  color: #ff6143;
-}
-/* 
-.ant-menu-item.ant-menu-item-active.home {
-  color: #ff6143;
-}
-.ant-menu-submenu.ant-menu-submenu-inlineant-menu-submenu-active {
-  color: #ff6143;
-} */
-
 .ant-layout-sider.ant-layout-sider-dark.ant-layout-sider-collapsed {
   min-width: 0;
   flex: 0;
 }
-
 .ant-layout-sider {
   background: #ffffff;
 }
