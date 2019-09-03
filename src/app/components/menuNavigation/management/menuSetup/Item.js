@@ -40,7 +40,7 @@ class Item extends React.Component {
     item.image = imageUrl;
     this.props.menuPreviewRef.onItemAdded(item);
     postFoodItem(item);
-    this.setState({ item: defaultItem });
+    this.setState({ item: defaultItem, imageBase64: "" });
   };
 
   componentDidMount() {
