@@ -47,7 +47,7 @@ class ViewAll extends React.Component {
       const arrival = res[1].split(".");
       newItem.arrival = arrival[0];
 
-      if (item.status === "active") {
+      if (item.status === "active" && item.order[0] === undefined) {
         newData.push(newItem);
       }
       return newData;
@@ -62,29 +62,24 @@ class ViewAll extends React.Component {
     });
   };
 
-  // showModal = id => {
-  //   this.setState({
-  //     visible: true
-  //   });
-  //   this.getDataOrder(id);
-  // };
+  showModal = id => {
+    if (id !== undefined) {
+      this.setState({
+        visible: true
+      });
+      this.getDataOrder(id);
+    }
+  };
 
   getDataOrder = async id => {
     const res = await getOrderApi(id);
     if (res !== undefined) {
       this.setState({ dataOrder: res, items: res.itemIds });
     }
-    // this.procesessDataOrder(data);
   };
 
-  // getDateOrder = datee => {
-  //   console.log(datee);
-  //   const res = datee.split("T");
-  //   const d = res[0];
-  //   return d;
-  // };
-
   render() {
+    console.log(this.state.data);
     return (
       <Table>
         <Thead>
@@ -107,20 +102,23 @@ class ViewAll extends React.Component {
               <Td>{item.arrivingAt}</Td>
               <Td>{item.nrSeats}</Td>
               <Td>{item.cash}</Td>
-              {/* <Td>{item.tableType}</Td> */}
               <Td>
                 <div>
-                  <Button onClick={() => this.showModal(item.order[0].id)}>
+                  {/* <Button
+                    onClick={() =>
+                      this.state.data
+                        ? this.showModal(item.order[0].id)
+                        : this.showModal(undefined)
+                    }
+                  >
                     {item.order[0].id}
-                  </Button>
+                  </Button> */}
                   <Modal
                     title="Basic Modal"
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancelModal}
                   >
-                    {/* <p>Order:{item.order[0].id}</p> */}
-                    {/* <p>{this.getDateOrder(this.state.dataOrder.createdAt)}</p> */}
                     <Table>
                       <Thead>
                         <Tr>

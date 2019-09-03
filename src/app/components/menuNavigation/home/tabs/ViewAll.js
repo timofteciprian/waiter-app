@@ -46,8 +46,9 @@ class ViewAll extends React.Component {
 
       const arrival = res[1].split(".");
       newItem.arrival = arrival[0];
-
-      newData.push(newItem);
+      if (item.order[0] === undefined) {
+        newData.push(newItem);
+      }
       return newData;
     });
     this.setState({ data: newData });
@@ -72,16 +73,7 @@ class ViewAll extends React.Component {
     if (res !== undefined) {
       this.setState({ dataOrder: res, items: res.itemIds });
     }
-    // this.procesessDataOrder(data);
   };
-
-  // getDateOrder = datee => {
-  //   console.log(datee);
-  //   const res = datee.split("T");
-  //   const d = res[0];
-  //   return d;
-  // };
-
   render() {
     return (
       <Table>
@@ -108,9 +100,9 @@ class ViewAll extends React.Component {
               {/* <Td>{item.tableType}</Td> */}
               <Td>
                 <div>
-                  <Button onClick={() => this.showModal(item.order[0].id)}>
+                  {/* <Button onClick={() => this.showModal(item.order[0].id)}>
                     {item.order[0].id}
-                  </Button>
+                  </Button> */}
                   <Modal
                     title="Basic Modal"
                     visible={this.state.visible}
